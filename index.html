@@ -489,17 +489,124 @@
       transition: opacity 0.3s;
     }
 
+    /* ── HAMBURGER MENU ── */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 36px;
+      height: 36px;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      padding: 7px;
+      z-index: 200;
+    }
+    .nav-hamburger span {
+      display: block;
+      height: 1.5px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* ── MOBILE DRAWER ── */
+    .nav-drawer {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(5,10,14,0.97);
+      backdrop-filter: blur(20px);
+      z-index: 150;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 36px;
+    }
+    .nav-drawer.open { display: flex; }
+    .nav-drawer a {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+      transition: color 0.2s;
+    }
+    .nav-drawer a:hover { color: var(--accent); }
+
     /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .skills-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+      .certs-grid  { grid-template-columns: 1fr; }
+    }
+
     @media (max-width: 768px) {
-      nav { padding: 14px 20px; }
-      .nav-links { gap: 20px; }
-      .hero { flex-direction: column-reverse; padding: 80px 20px 40px; gap: 40px; text-align: center; }
-      .hero-bio { max-width: 100%; }
+      /* Nav */
+      nav { padding: 12px 20px; }
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+
+      /* Hero */
+      .hero {
+        flex-direction: column;
+        padding: 90px 20px 50px;
+        gap: 36px;
+        text-align: center;
+        min-height: auto;
+      }
+      .hero-content { order: 2; }
+      .hero-photo-wrap { order: 1; }
+      .hero-eyebrow { justify-content: center; }
+      .hero-bio { max-width: 100%; font-size: 14px; }
       .hero-ctas { justify-content: center; }
-      .hero-photo-frame { width: 200px; height: 240px; }
+      .hero-name { font-size: clamp(34px, 9vw, 52px); letter-spacing: -1px; }
+      .hero-role { font-size: 15px; }
+
+      /* Photo */
+      .hero-photo-frame { width: 160px; height: 196px; border-radius: 16px; }
+      .floating-badge { bottom: -12px; left: -12px; padding: 8px 12px; }
+      .floating-badge strong { font-size: 15px; }
+
+      /* Sections */
       section { padding: 60px 20px; }
-      .contact-grid { grid-template-columns: 1fr; }
-      .trust-badge { bottom: 12px; right: 12px; }
+      .section-title { font-size: clamp(28px, 7vw, 40px); letter-spacing: -1px; margin-bottom: 32px; }
+
+      /* Skills */
+      .skills-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .skill-card { padding: 14px 16px; gap: 12px; }
+      .skill-icon { width: 36px; height: 36px; font-size: 16px; }
+      .skill-name { font-size: 13px; }
+
+      /* Exp */
+      .exp-card { padding: 24px 20px; }
+      .exp-company { font-size: 18px; }
+
+      /* Certs */
+      .certs-grid { grid-template-columns: 1fr; gap: 10px; }
+
+      /* Contact */
+      .contact-grid { grid-template-columns: 1fr; gap: 10px; }
+      .contact-item { padding: 16px 18px; }
+      .contact-value { font-size: 13px; word-break: break-all; }
+
+      /* Trust badge */
+      .trust-badge { bottom: 12px; right: 12px; padding: 8px 12px; gap: 8px; }
+      .trust-badge-text { display: none; }
+
+      /* Footer */
+      footer { padding: 28px 20px; font-size: 12px; }
+    }
+
+    @media (max-width: 400px) {
+      .skills-grid { grid-template-columns: 1fr; }
+      .hero-name { font-size: 30px; }
+      .btn-primary, .btn-secondary { padding: 12px 20px; font-size: 13px; }
     }
   </style>
 </head>
@@ -530,7 +637,19 @@
     <li><a href="#certificados">Certificados</a></li>
     <li><a href="#contato">Contato</a></li>
   </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Abrir menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- Mobile Drawer -->
+<div class="nav-drawer" id="navDrawer">
+  <a href="#sobre"        onclick="closeDrawer()">Sobre</a>
+  <a href="#habilidades"  onclick="closeDrawer()">Skills</a>
+  <a href="#experiencia"  onclick="closeDrawer()">Experiência</a>
+  <a href="#certificados" onclick="closeDrawer()">Certificados</a>
+  <a href="#contato"      onclick="closeDrawer()">Contato</a>
+</div>
 
 <!-- Hero -->
 <section class="hero" id="sobre">
@@ -730,7 +849,7 @@
     <h2 class="section-title">Contato</h2>
   </div>
   <div class="contact-grid reveal">
-    <a href="tel:+5561991594440" class="contact-item">
+    <a href="tel:+5561991547238" class="contact-item">
       <div class="contact-ico">📞</div>
       <div>
         <div class="contact-label">Telefone</div>
@@ -767,11 +886,28 @@
 </footer>
 
 <script>
-  // Cursor glow
+  // Hamburger menu
+  const hamburger = document.getElementById('hamburger');
+  const navDrawer = document.getElementById('navDrawer');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    navDrawer.classList.toggle('open');
+    document.body.style.overflow = navDrawer.classList.contains('open') ? 'hidden' : '';
+  });
+  function closeDrawer() {
+    hamburger.classList.remove('open');
+    navDrawer.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Cursor glow (only desktop)
   const glow = document.getElementById('cursorGlow');
+  if (window.matchMedia('(pointer: coarse)').matches) glow.style.display = 'none';
   document.addEventListener('mousemove', e => {
-    glow.style.left = e.clientX + 'px';
-    glow.style.top = e.clientY + 'px';
+    if (glow.style.display !== 'none') {
+      glow.style.left = e.clientX + 'px';
+      glow.style.top = e.clientY + 'px';
+    }
   });
 
   // Scroll reveal
