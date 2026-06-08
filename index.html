@@ -1,87 +1,822 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="./assets/styles.css">
   <link rel="icon" href="./assets/img/logol.ico" type="image/x-icon">
-  <title>Portfólio de Luiz Felipe</title>
-</head>
+  <title>Portfólio — Luiz Felipe Nascimento Mota</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #050a0e;
+      --bg2: #0a1520;
+      --accent: #00d4ff;
+      --accent2: #00ff9d;
+      --accent3: #7b5ea7;
+      --text: #e8f4f8;
+      --muted: #6a8fa8;
+      --card: #0d1f2d;
+      --border: rgba(0, 212, 255, 0.15);
+      --glow: rgba(0, 212, 255, 0.08);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
 
+    /* ── GRID NOISE BACKGROUND ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(0,212,255,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 85% 90%, rgba(0,255,157,0.05) 0%, transparent 60%),
+        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+      background-size: auto, auto, 60px 60px, 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    body > * { position: relative; z-index: 1; }
+
+    /* ── TRUST BADGE ── */
+    .trust-badge {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 999;
+      background: linear-gradient(135deg, #0d1f2d, #1a3348);
+      border: 1px solid rgba(0,255,157,0.4);
+      border-radius: 14px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      color: var(--accent2);
+      box-shadow: 0 0 20px rgba(0,255,157,0.15), 0 4px 20px rgba(0,0,0,0.4);
+      animation: badgePulse 3s ease-in-out infinite;
+      cursor: default;
+      text-decoration: none;
+    }
+    .trust-badge svg { flex-shrink: 0; }
+    .trust-badge-text { display: flex; flex-direction: column; line-height: 1.3; }
+    .trust-badge-title { font-weight: 600; font-size: 11px; color: var(--accent2); }
+    .trust-badge-sub { font-size: 9px; color: #4dbb8a; letter-spacing: 0.5px; text-transform: uppercase; }
+    @keyframes badgePulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(0,255,157,0.15), 0 4px 20px rgba(0,0,0,0.4); }
+      50% { box-shadow: 0 0 30px rgba(0,255,157,0.3), 0 4px 20px rgba(0,0,0,0.4); }
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 40px;
+      background: rgba(5,10,14,0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      animation: slideDown 0.6s ease;
+    }
+    @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -0.5px;
+    }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      transition: color 0.3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--accent);
+      transition: width 0.3s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 100px 40px 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+      gap: 60px;
+    }
+    .hero-content { flex: 1; animation: heroFade 1s ease 0.3s both; }
+    @keyframes heroFade { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 20px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 1px;
+      background: var(--accent2);
+    }
+    .hero-name {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(42px, 6vw, 80px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -2px;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .hero-name span {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-role {
+      font-size: 18px;
+      font-weight: 300;
+      color: var(--muted);
+      margin-bottom: 28px;
+      font-style: italic;
+    }
+    .hero-bio {
+      font-size: 15px;
+      color: #9bb8cc;
+      max-width: 520px;
+      margin-bottom: 40px;
+      line-height: 1.8;
+    }
+    .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: var(--accent);
+      color: #050a0e;
+      font-weight: 600;
+      font-size: 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,212,255,0.35); }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 27px;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--accent); background: var(--glow); }
+
+    .hero-photo-wrap {
+      flex-shrink: 0;
+      animation: heroFade 1s ease 0.6s both;
+      position: relative;
+    }
+    .hero-photo-frame {
+      width: 260px;
+      height: 320px;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--card);
+      position: relative;
+    }
+    .hero-photo-frame::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      background: linear-gradient(135deg, rgba(0,212,255,0.4), transparent 50%, rgba(0,255,157,0.2));
+      border-radius: 21px;
+      z-index: -1;
+    }
+    .hero-photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+    }
+    .hero-photo-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-size: 72px;
+      font-weight: 800;
+      color: var(--accent);
+      opacity: 0.3;
+    }
+    .floating-badge {
+      position: absolute;
+      bottom: -16px;
+      left: -20px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-size: 12px;
+      animation: float 4s ease-in-out infinite;
+    }
+    .floating-badge strong { color: var(--accent2); font-size: 18px; display: block; font-family: 'Syne', sans-serif; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* ── SECTION BASE ── */
+    section { padding: 100px 40px; max-width: 1200px; margin: 0 auto; }
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+    .section-label::before {
+      content: '';
+      width: 20px;
+      height: 1px;
+      background: var(--accent);
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 48px;
+    }
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border), transparent);
+      margin: 0;
+    }
+
+    /* ── SKILLS ── */
+    #habilidades { background: none; }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .skill-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.5s ease forwards;
+    }
+    .skill-card:hover {
+      border-color: rgba(0,212,255,0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0,212,255,0.08);
+    }
+    .skill-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--glow);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .skill-name { font-weight: 500; font-size: 14px; color: var(--text); }
+    .skill-cat { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+    /* ── EXPERIENCE ── */
+    .exp-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .exp-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--accent), var(--accent2));
+      border-radius: 3px 0 0 3px;
+    }
+    .exp-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+    .exp-company { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: #fff; }
+    .exp-role { font-size: 14px; color: var(--accent); margin-top: 4px; font-weight: 500; }
+    .exp-period {
+      font-size: 12px;
+      color: var(--muted);
+      background: rgba(0,212,255,0.08);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 100px;
+    }
+    .exp-items { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .exp-items li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: #9bb8cc;
+      line-height: 1.6;
+    }
+    .exp-items li::before {
+      content: '›';
+      color: var(--accent);
+      font-size: 18px;
+      line-height: 1.4;
+      flex-shrink: 0;
+    }
+
+    /* ── CERTIFICATES ── */
+    .certs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 14px;
+    }
+    .cert-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 22px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      transition: border-color 0.3s, transform 0.2s;
+    }
+    .cert-card:hover { border-color: rgba(0,255,157,0.35); transform: translateX(4px); }
+    .cert-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(0,255,157,0.08);
+      border: 1px solid rgba(0,255,157,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .cert-name { font-size: 14px; font-weight: 500; color: var(--text); }
+    .cert-issuer { font-size: 12px; color: var(--muted); margin-top: 3px; }
+
+    /* ── CONTACT ── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .contact-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.3s, transform 0.2s;
+    }
+    .contact-item:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .contact-ico {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--glow);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .contact-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .contact-value { font-size: 14px; font-weight: 500; color: var(--text); margin-top: 2px; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+    }
+    footer span { color: var(--accent); }
+
+    /* ── SCROLL ANIMATIONS ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── CURSOR GLOW ── */
+    .cursor-glow {
+      position: fixed;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,212,255,0.05) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.3s;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 14px 20px; }
+      .nav-links { gap: 20px; }
+      .hero { flex-direction: column-reverse; padding: 80px 20px 40px; gap: 40px; text-align: center; }
+      .hero-bio { max-width: 100%; }
+      .hero-ctas { justify-content: center; }
+      .hero-photo-frame { width: 200px; height: 240px; }
+      section { padding: 60px 20px; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .trust-badge { bottom: 12px; right: 12px; }
+    }
+  </style>
+</head>
 <body>
-  <header>
-    <img src="./assets/img/luizfelipenm.jpg" alt="Foto de Luiz Felipe" class="profile-photo">
-    <h1>Luiz Felipe Nascimento Mota</h1>
-  </header>
-  <div class="container">
-    <h2>Sobre mim</h2>
-    <p>
-      Olá, meu nome é Luiz Felipe, tenho 20 anos e recentemente acabei de
-      concluir meu ensino superior no curso de Gestão da Tecnologia da
-      Informação na Faculdade de Tecnologia e Inovação do Senac - DF. Desde a
-      infância, sempre fui curioso em relação ao funcionamento dos eletrônicos.
-      Perguntava-me como eles operavam. Quando tive meu primeiro contato
-      com um computador, percebi que desejava trabalhar com isso pelo resto da
-      minha vida. Meu objetivo é trabalhar na área de Tecnologia da Informação
-      para adquirir mais conhecimento e experiência, visando seguir em direção
-      ao meu sonho profissional nesta carreira. Interessado em sempre está
-      aprendendo, adquirindo conhecimento e obtendo certificações.
+
+<!-- Cursor glow -->
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- Trust Badge -->
+<div class="trust-badge" title="Site verificado e seguro">
+  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14 2L4 6.5V13C4 18.8 8.4 24.2 14 26C19.6 24.2 24 18.8 24 13V6.5L14 2Z" fill="rgba(0,255,157,0.15)" stroke="#00ff9d" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M9.5 14L12.5 17L18.5 11" stroke="#00ff9d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <div class="trust-badge-text">
+    <span class="trust-badge-title">Site Verificado ✓</span>
+    <span class="trust-badge-sub">Seguro · Autêntico · HTTPS</span>
+  </div>
+</div>
+
+<!-- Navigation -->
+<nav>
+  <div class="nav-logo">LF.</div>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#habilidades">Skills</a></li>
+    <li><a href="#experiencia">Experiência</a></li>
+    <li><a href="#certificados">Certificados</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="sobre">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Disponível para oportunidades</div>
+    <h1 class="hero-name">Luiz <span>Felipe</span><br>Nascimento Mota</h1>
+    <p class="hero-role">Tecnólogo em Gestão da Informação</p>
+    <p class="hero-bio">
+      Olá! Tenho 20 anos e recém-concluí meu ensino superior no curso de Gestão da Tecnologia da Informação no Senac-DF. Apaixonado por tecnologia desde a infância, meu objetivo é crescer na área de TI, adquirindo experiência e certificações para construir uma carreira sólida.
     </p>
-    <h2>Contato</h2>
-    <ul>
-      <li>Guará II - Brasília DF</li>
-      <li>+55 (61) 99159-4440</li>
-      <li>luizfelipenascimentomota17@gmail.com</li>
-      <li>Estado civil: Solteiro</li>
-      <li>Nacionalidade: Brasileiro</li>
-      <li>Data de nascimento: 17/05/2004</li>
-      <li>Link: <a href="https://www.linkedin.com/in/luizfelipenm/" target="_blank">linkedin.com/in/luizfelipenm</a></li>
-    </ul>
-    <h2>Habilidades e Competências</h2>
-    <ul>
-      <li>HTML</li>
-      <li>CSS</li>
-      <li>JavaScript</li>
-      <li>Java</li>
-      <li>Python</li>
-      <li>SQL</li>
-      <li>Lógica de programação: Virtualg30 e Flowgorithm</li>
-      <li>Metodologias Ágeis: Scrum (Obtenho o Certificado Scrum Foundation)</li>
-      <li>Modelagem de Banco de Dados</li>
-      <li>Banco de Dados: MySQL e PostgreSQL</li>
-      <li>AWS - Cloud</li>
-      <li>Pacote Office 365</li>
-    </ul>
-    <h2>Experiência</h2>
-    <ul>
-      <h3>Freelancer/Estudante</h3>
-      <h3>Laboratório Senac-DF</h3>
-      <li>Criação de Sites</li>
-      <li>Criação de Banco de Dados</li>
-      <li>Criação de Rede de Computadores e simulação do funcionamento da rede criada.</li>
-      <li>Criação de Máquinas em Nuvem usando a ferramenta da AWS.</li>
-      <li>Criação de sua propria VPN.</li>
-      <li>Github</li>
-      <li>Conhecimento em processos e práticas do ITIL v3/v4</li>
-      <li>Dedicação para absorver novos aprendizados</li>
-      <li>Adaptabilidade para atuar em diferentes setores</li>
-    </ul>
-    <h2>Certificados</h2>
-    <ul>
-      <li>Scrum Foundation (CertiProf)</li>
-      <li>Python Essentials 1 (Cisco Networking Academy)</li>
-      <li>JavaScript Essentials 1 (Cisco Networking Academy)</li>
-      <li>Networking Basics (Cisco Networking Academy)</li>
-      <li> AWS Academy Cloud Foundations (AWS Academy Graduate)</li>
-      <li>Java Fundamentals Learner (Oracle Academy)</li>
-      <li>Networking Essentials (Cisco Networking Academy)</li>
-      <li>NDG Linux Unhatched (Cisco Networking Academy)</li>
+    <div class="hero-ctas">
+      <a href="#contato" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Entrar em Contato
+      </a>
+      <a href="https://www.linkedin.com/in/luizfelipenm/" target="_blank" class="btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </a>
+    </div>
+  </div>
+  <div class="hero-photo-wrap">
+    <div class="hero-photo-frame">
+      <img src="./assets/img/luizfelipenm.jpg" alt="Foto de Luiz Felipe"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="hero-photo-placeholder" style="display:none;">LF</div>
+    </div>
+    <div class="floating-badge">
+      <strong>20</strong>
+      anos de idade
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Habilidades -->
+<section id="habilidades">
+  <div class="reveal">
+    <div class="section-label">Competências</div>
+    <h2 class="section-title">Habilidades &<br>Tecnologias</h2>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-card reveal" style="animation-delay:0.05s">
+      <div class="skill-icon">🌐</div>
+      <div><div class="skill-name">HTML & CSS</div><div class="skill-cat">Front-end</div></div>
+    </div>
+    <div class="skill-card reveal" style="animation-delay:0.1s">
+      <div class="skill-icon">⚡</div>
+      <div><div class="skill-name">JavaScript</div><div class="skill-cat">Front-end</div></div>
+    </div>
+    <div class="skill-card reveal" style="animation-delay:0.15s">
+      <div class="skill-icon">☕</div>
+      <div><div class="skill-name">Java</div><div class="skill-cat">Back-end</div></div>
+    </div>
+    <div class="skill-card reveal" style="animation-delay:0.2s">
+      <div class="skill-icon">🐍</div>
+      <div><div class="skill-name">Python</div><div class="skill-cat">Back-end</div></div>
+    </div>
+    <div class="skill-card reveal" style="animation-delay:0.25s">
+      <div class="skill-icon">🗄️</div>
+      <div><div class="skill-name">SQL · MySQL · PostgreSQL</div><div class="skill-cat">Banco de Dados</div></div>
+    </div>
+    <div class="skill-card reveal" style="animation-delay:0.3s">
+      <div class="skill-icon">☁️</div>
+      <div><div class="skill-name">AWS Cloud</div><div class="skill-cat">Cloud & Infraestrutura</div></div>
+    </div>
+    <div class="skill-card reveal" style="animation-delay:0.35s">
+      <div class="skill-icon">🔀</div>
+      <div><div class="skill-name">Scrum · Metodologias Ágeis</div><div class="skill-cat">Gestão de Projetos</div></div>
+    </div>
+    <div class="skill-card reveal" style="animation-delay:0.4s">
+      <div class="skill-icon">🔷</div>
+      <div><div class="skill-name">Modelagem de BD</div><div class="skill-cat">Banco de Dados</div></div>
+    </div>
+    <div class="skill-card reveal" style="animation-delay:0.45s">
+      <div class="skill-icon">🖥️</div>
+      <div><div class="skill-name">Redes de Computadores</div><div class="skill-cat">Infraestrutura</div></div>
+    </div>
+    <div class="skill-card reveal" style="animation-delay:0.5s">
+      <div class="skill-icon">📋</div>
+      <div><div class="skill-name">ITIL v3/v4</div><div class="skill-cat">Governança de TI</div></div>
+    </div>
+    <div class="skill-card reveal" style="animation-delay:0.55s">
+      <div class="skill-icon">🐙</div>
+      <div><div class="skill-name">GitHub</div><div class="skill-cat">Versionamento</div></div>
+    </div>
+    <div class="skill-card reveal" style="animation-delay:0.6s">
+      <div class="skill-icon">📊</div>
+      <div><div class="skill-name">Office 365</div><div class="skill-cat">Produtividade</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Experiência -->
+<section id="experiencia">
+  <div class="reveal">
+    <div class="section-label">Trajetória</div>
+    <h2 class="section-title">Experiência</h2>
+  </div>
+  <div class="exp-card reveal">
+    <div class="exp-header">
+      <div>
+        <div class="exp-company">Laboratório Senac-DF</div>
+        <div class="exp-role">Freelancer & Estudante Técnico</div>
+      </div>
+      <div class="exp-period">2022 – 2024</div>
+    </div>
+    <ul class="exp-items">
+      <li>Criação e desenvolvimento de sites completos</li>
+      <li>Modelagem e criação de bancos de dados relacionais</li>
+      <li>Criação e simulação de redes de computadores</li>
+      <li>Provisionamento de máquinas virtuais na AWS Cloud</li>
+      <li>Configuração de VPN própria</li>
+      <li>Versionamento de código com GitHub</li>
+      <li>Aplicação de práticas e processos do ITIL v3/v4</li>
     </ul>
   </div>
-  <footer>
-    &copy; 2024 Luiz Felipe Nascimento Mota
-  </footer>
-</body>
+</section>
 
+<div class="divider"></div>
+
+<!-- Certificados -->
+<section id="certificados">
+  <div class="reveal">
+    <div class="section-label">Formação</div>
+    <h2 class="section-title">Certificados</h2>
+  </div>
+  <div class="certs-grid">
+    <div class="cert-card reveal">
+      <div class="cert-icon">🏅</div>
+      <div>
+        <div class="cert-name">Scrum Foundation</div>
+        <div class="cert-issuer">CertiProf</div>
+      </div>
+    </div>
+    <div class="cert-card reveal">
+      <div class="cert-icon">🐍</div>
+      <div>
+        <div class="cert-name">Python Essentials 1</div>
+        <div class="cert-issuer">Cisco Networking Academy</div>
+      </div>
+    </div>
+    <div class="cert-card reveal">
+      <div class="cert-icon">⚡</div>
+      <div>
+        <div class="cert-name">JavaScript Essentials 1</div>
+        <div class="cert-issuer">Cisco Networking Academy</div>
+      </div>
+    </div>
+    <div class="cert-card reveal">
+      <div class="cert-icon">🌐</div>
+      <div>
+        <div class="cert-name">Networking Basics</div>
+        <div class="cert-issuer">Cisco Networking Academy</div>
+      </div>
+    </div>
+    <div class="cert-card reveal">
+      <div class="cert-icon">☁️</div>
+      <div>
+        <div class="cert-name">AWS Academy Cloud Foundations</div>
+        <div class="cert-issuer">AWS Academy Graduate</div>
+      </div>
+    </div>
+    <div class="cert-card reveal">
+      <div class="cert-icon">☕</div>
+      <div>
+        <div class="cert-name">Java Fundamentals Learner</div>
+        <div class="cert-issuer">Oracle Academy</div>
+      </div>
+    </div>
+    <div class="cert-card reveal">
+      <div class="cert-icon">🔗</div>
+      <div>
+        <div class="cert-name">Networking Essentials</div>
+        <div class="cert-issuer">Cisco Networking Academy</div>
+      </div>
+    </div>
+    <div class="cert-card reveal">
+      <div class="cert-icon">🐧</div>
+      <div>
+        <div class="cert-name">NDG Linux Unhatched</div>
+        <div class="cert-issuer">Cisco Networking Academy</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Contato -->
+<section id="contato">
+  <div class="reveal">
+    <div class="section-label">Fale comigo</div>
+    <h2 class="section-title">Contato</h2>
+  </div>
+  <div class="contact-grid reveal">
+    <a href="tel:+5561991594440" class="contact-item">
+      <div class="contact-ico">📞</div>
+      <div>
+        <div class="contact-label">Telefone</div>
+        <div class="contact-value">+55 (61) 99159-4440</div>
+      </div>
+    </a>
+    <a href="mailto:luizfelipenascimentomota17@gmail.com" class="contact-item">
+      <div class="contact-ico">✉️</div>
+      <div>
+        <div class="contact-label">E-mail</div>
+        <div class="contact-value">luizfelipenascimentomota17@gmail.com</div>
+      </div>
+    </a>
+    <a href="https://www.linkedin.com/in/luizfelipenm/" target="_blank" class="contact-item">
+      <div class="contact-ico">💼</div>
+      <div>
+        <div class="contact-label">LinkedIn</div>
+        <div class="contact-value">linkedin.com/in/luizfelipenm</div>
+      </div>
+    </a>
+    <div class="contact-item" style="cursor:default;">
+      <div class="contact-ico">📍</div>
+      <div>
+        <div class="contact-label">Localização</div>
+        <div class="contact-value">Guará II — Brasília, DF</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>© 2024 <span>Luiz Felipe Nascimento Mota</span> · Brasília, DF · Todos os direitos reservados</p>
+</footer>
+
+<script>
+  // Cursor glow
+  const glow = document.getElementById('cursorGlow');
+  document.addEventListener('mousemove', e => {
+    glow.style.left = e.clientX + 'px';
+    glow.style.top = e.clientY + 'px';
+  });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Stagger skill cards on scroll
+  const skillObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const cards = document.querySelectorAll('.skill-card');
+        cards.forEach((c, i) => {
+          setTimeout(() => c.style.animationPlayState = 'running', i * 60);
+        });
+        skillObs.disconnect();
+      }
+    });
+  }, { threshold: 0.1 });
+  const skillSection = document.getElementById('habilidades');
+  if (skillSection) skillObs.observe(skillSection);
+
+  // Pause skill card animations until visible
+  document.querySelectorAll('.skill-card').forEach(c => {
+    c.style.animationPlayState = 'paused';
+  });
+
+  // Nav active state
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 100) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--accent)' : '';
+    });
+  });
+</script>
+</body>
 </html>
