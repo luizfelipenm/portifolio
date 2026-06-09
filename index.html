@@ -148,6 +148,44 @@
     }
     .nav-links a:hover { color: var(--accent); }
     .nav-links a:hover::after { width: 100%; }
+    .nav-minigame {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #050a0e !important;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      padding: 6px 14px;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: opacity .2s, transform .2s, box-shadow .2s !important;
+      white-space: nowrap;
+    }
+    .nav-minigame::after { display: none !important; }
+    .nav-minigame:hover {
+      opacity: .9;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 18px rgba(0,212,255,.35);
+      color: #050a0e !important;
+    }
+    .drawer-minigame {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      color: #050a0e !important;
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      padding: 10px 32px;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: opacity .2s, transform .2s;
+    }
+    .drawer-minigame:hover { opacity: .85; transform: scale(1.03); }
 
     /* ── HERO ── */
     .hero {
@@ -734,6 +772,7 @@
     <li><a href="#experiencia">Experiência</a></li>
     <li><a href="#certificados">Certificados</a></li>
     <li><a href="#contato">Contato</a></li>
+    <li><a href="./speedtyping.html" class="nav-minigame">⌨️ Mini Game</a></li>
   </ul>
   <button class="nav-hamburger" id="hamburger" aria-label="Abrir menu">
     <span></span><span></span><span></span>
@@ -747,6 +786,7 @@
   <a href="#experiencia"  onclick="closeDrawer()">Experiência</a>
   <a href="#certificados" onclick="closeDrawer()">Certificados</a>
   <a href="#contato"      onclick="closeDrawer()">Contato</a>
+  <a href="./speedtyping.html" class="drawer-minigame">⌨️ Mini Game</a>
 </div>
 
 <!-- Hero -->
