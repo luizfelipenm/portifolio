@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="./assets/img/lf.ico" type="image/x-icon">
+  <title>Speed Typing — LF. Portfólio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:      #050a0e;
+      --bg2:     #0a1520;
+      --card:    #0d1f2d;
+      --card2:   #112233;
+      --accent:  #00d4ff;
+      --accent2: #00ff9d;
+      --muted:   #6a8fa8;
+      --text:    #e8f4f8;
+      --border:  rgba(0,212,255,0.15);
+      --glow:    rgba(0,212,255,0.08);
+      --red:     #ff4d6d;
+      --yellow:  #ffd166;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── GRID BACKGROUND ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(0,212,255,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 85% 90%, rgba(0,255,157,0.05) 0%, transparent 60%),
+        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+      background-size: auto, auto, 60px 60px, 60px 60px;
+      pointer-events: none; z-index: 0;
+    }
+    body > * { position: relative; z-index: 1; }
+
+    /* ── BLOB ── */
+    .blob {
+      position: fixed;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      transform: translate(-50%,-50%);
+      transition: left .15s ease, top .15s ease;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 40px;
+      background: rgba(5,10,14,0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px; font-weight: 800;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+      transition: opacity .2s;
+    }
+    .nav-logo:hover { opacity: .75; }
+    .nav-back {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: .5px;
+      transition: color .2s;
+    }
+    .nav-back:hover { color: var(--accent); }
+    .nav-back svg { transition: transform .2s; }
+    .nav-back:hover svg { transform: translateX(-3px); }
+    .nav-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px; letter-spacing: 2px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 4px 12px; border-radius: 100px;
+    }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 48px 24px 60px;
+      gap: 32px;
+      max-width: 860px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ── HEADER ── */
+    .game-header { text-align: center; }
+    .game-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px; letter-spacing: 3px;
+      color: var(--accent2); text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .game-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 800; letter-spacing: -1.5px;
+      color: #fff; line-height: 1.05;
+    }
+    .game-title span {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .game-sub {
+      font-size: 14px; color: var(--muted);
+      margin-top: 10px; line-height: 1.6;
+    }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: flex; gap: 16px;
+      width: 100%; flex-wrap: wrap;
+    }
+    .stat-card {
+      flex: 1; min-width: 100px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      text-align: center;
+      transition: border-color .3s;
+    }
+    .stat-card.highlight { border-color: rgba(0,212,255,.4); }
+    .stat-value {
+      font-family: 'Space Mono', monospace;
+      font-size: 28px; font-weight: 700;
+      color: var(--accent); line-height: 1;
+    }
+    .stat-value.green { color: var(--accent2); }
+    .stat-value.red   { color: var(--red); }
+    .stat-value.yellow{ color: var(--yellow); }
+    .stat-label {
+      font-size: 11px; letter-spacing: 2px;
+      color: var(--muted); margin-top: 6px;
+      text-transform: uppercase;
+    }
+
+    /* ── TIMER RING ── */
+    .timer-wrap {
+      position: relative;
+      width: 80px; height: 80px;
+      flex-shrink: 0;
+    }
+    .timer-ring { transform: rotate(-90deg); }
+    .timer-ring-bg { fill: none; stroke: rgba(0,212,255,.1); stroke-width: 5; }
+    .timer-ring-prog {
+      fill: none; stroke: var(--accent); stroke-width: 5;
+      stroke-linecap: round;
+      stroke-dasharray: 220;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset .95s linear, stroke .3s;
+    }
+    .timer-num {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Space Mono', monospace;
+      font-size: 22px; font-weight: 700;
+      color: var(--accent);
+    }
+
+    /* ── MODE SELECTOR ── */
+    .mode-bar {
+      display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+    }
+    .mode-btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px; letter-spacing: 2px;
+      padding: 8px 18px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--muted);
+      border-radius: 100px;
+      cursor: pointer;
+      transition: border-color .2s, color .2s, background .2s;
+      text-transform: uppercase;
+    }
+    .mode-btn:hover  { border-color: var(--accent); color: var(--text); }
+    .mode-btn.active { border-color: var(--accent); color: var(--accent); background: var(--glow); }
+
+    /* ── WORD DISPLAY ── */
+    .word-display-wrap {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 32px;
+      min-height: 110px;
+      display: flex; align-items: center;
+      flex-wrap: wrap; gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+    .word-display-wrap::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 16px 16px 0 0;
+    }
+    .word-token {
+      font-family: 'Space Mono', monospace;
+      font-size: 18px; letter-spacing: 1px;
+      padding: 2px 4px; border-radius: 4px;
+      transition: color .1s, background .1s;
+      white-space: nowrap;
+    }
+    .word-token.done    { color: var(--accent2); }
+    .word-token.error   { color: var(--red); background: rgba(255,77,109,.1); text-decoration: underline; }
+    .word-token.current { color: #fff; }
+    .word-token.pending { color: var(--muted); }
+
+    /* cursor blink on current word */
+    .word-token.current::after {
+      content: '|';
+      color: var(--accent);
+      animation: blink .8s step-end infinite;
+      margin-left: 1px;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ── INPUT ── */
+    .input-row {
+      display: flex; gap: 12px; width: 100%; align-items: center;
+    }
+    .typing-input {
+      flex: 1;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-family: 'Space Mono', monospace;
+      font-size: 16px; letter-spacing: 1px;
+      color: var(--text);
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      caret-color: var(--accent);
+    }
+    .typing-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,212,255,.08); }
+    .typing-input.correct { border-color: rgba(0,255,157,.5); }
+    .typing-input.wrong   { border-color: rgba(255,77,109,.5); box-shadow: 0 0 0 3px rgba(255,77,109,.08); }
+    .typing-input:disabled { opacity: .4; cursor: not-allowed; }
+
+    .restart-btn {
+      width: 50px; height: 50px;
+      border-radius: 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color .2s, color .2s, transform .2s;
+      flex-shrink: 0;
+    }
+    .restart-btn:hover { border-color: var(--accent); color: var(--accent); transform: rotate(180deg); }
+
+    /* ── START OVERLAY ── */
+    .overlay {
+      position: absolute; inset: 0;
+      background: rgba(5,10,14,.92);
+      border-radius: 16px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 14px; z-index: 10;
+      backdrop-filter: blur(4px);
+    }
+    .overlay-icon { font-size: 40px; }
+    .overlay-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px; font-weight: 800;
+      color: #fff; text-align: center;
+    }
+    .overlay-sub { font-size: 13px; color: var(--muted); text-align: center; line-height: 1.6; }
+    .overlay-btn {
+      margin-top: 6px;
+      padding: 12px 32px;
+      background: var(--accent); color: #050a0e;
+      font-weight: 700; font-size: 14px;
+      border: none; border-radius: 8px;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .overlay-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,212,255,.35); }
+
+    /* ── RESULTS PANEL ── */
+    .results-panel {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      display: none;
+      flex-direction: column; gap: 24px;
+      animation: fadeUp .5s ease both;
+    }
+    .results-panel.show { display: flex; }
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px,1fr));
+      gap: 14px;
+    }
+    .result-card {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      text-align: center;
+    }
+    .result-val {
+      font-family: 'Space Mono', monospace;
+      font-size: 32px; font-weight: 700;
+      color: var(--accent); line-height: 1;
+    }
+    .result-val.green  { color: var(--accent2); }
+    .result-val.red    { color: var(--red); }
+    .result-val.yellow { color: var(--yellow); }
+    .result-label { font-size: 11px; letter-spacing: 2px; color: var(--muted); margin-top: 6px; text-transform: uppercase; }
+    .result-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px; font-weight: 800;
+      color: #fff;
+    }
+    .result-msg { font-size: 14px; color: var(--muted); line-height: 1.6; }
+    .result-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 26px;
+      background: var(--accent); color: #050a0e;
+      font-weight: 700; font-size: 14px;
+      border: none; border-radius: 8px; cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,212,255,.3); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 11px 24px;
+      background: none; color: var(--text);
+      font-size: 14px; font-weight: 500;
+      border: 1px solid var(--border); border-radius: 8px; cursor: pointer;
+      transition: border-color .2s, background .2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-secondary:hover { border-color: var(--accent); background: var(--glow); }
+
+    /* ── WORD CATEGORIES ── */
+    .category-info {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px; letter-spacing: 2px;
+      color: var(--muted); text-transform: uppercase;
+      text-align: center;
+    }
+    .category-info span { color: var(--accent); }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 28px 40px;
+      color: var(--muted);
+      font-size: 12px;
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform: translateY(20px); }
+      to   { opacity:1; transform: none; }
+    }
+
+    /* ── PROGRESS BAR ── */
+    .progress-wrap {
+      width: 100%;
+      height: 4px;
+      background: rgba(0,212,255,.1);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 100px;
+      transition: width .3s ease;
+      width: 0%;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav { padding: 12px 20px; }
+      main { padding: 32px 16px 48px; }
+      .word-display-wrap { padding: 20px; }
+      .word-token { font-size: 15px; }
+      .typing-input { font-size: 14px; }
+      .stats-bar { gap: 10px; }
+      .stat-value { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="blob" id="blob"></div>
+
+<!-- Nav -->
+<nav>
+  <a href="./index.html" class="nav-logo">LF.</a>
+  <div class="nav-tag">Mini Game</div>
+  <a href="./index.html" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    Voltar ao portfólio
+  </a>
+</nav>
+
+<main>
+
+  <!-- Header -->
+  <div class="game-header">
+    <div class="game-eyebrow">// mini game</div>
+    <h1 class="game-title">Speed <span>Typing</span></h1>
+    <p class="game-sub">Digite termos de TI o mais rápido possível · Escolha o modo e pressione iniciar</p>
+  </div>
+
+  <!-- Mode selector -->
+  <div class="mode-bar">
+    <button class="mode-btn active" data-mode="30">30 seg</button>
+    <button class="mode-btn" data-mode="60">60 seg</button>
+    <button class="mode-btn" data-mode="120">2 min</button>
+    <button class="mode-btn" data-mode="zen" title="Sem tempo — digita à vontade">∞ Zen</button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-card" id="wpmCard">
+      <div class="stat-value" id="statWpm">0</div>
+      <div class="stat-label">WPM</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value green" id="statAcc">—</div>
+      <div class="stat-label">Precisão</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value yellow" id="statCorrect">0</div>
+      <div class="stat-label">Corretas</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value red" id="statErrors">0</div>
+      <div class="stat-label">Erros</div>
+    </div>
+    <!-- Timer ring -->
+    <div class="stat-card" style="display:flex;align-items:center;justify-content:center;flex:0 0 auto;padding:10px;">
+      <div class="timer-wrap">
+        <svg class="timer-ring" width="80" height="80" viewBox="0 0 80 80">
+          <circle class="timer-ring-bg" cx="40" cy="40" r="35"/>
+          <circle class="timer-ring-prog" id="timerRing" cx="40" cy="40" r="35"/>
+        </svg>
+        <div class="timer-num" id="timerNum">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+
+  <!-- Word display -->
+  <div class="word-display-wrap" id="wordWrap">
+    <div class="word-display" id="wordDisplay" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;width:100%;"></div>
+    <!-- Start overlay -->
+    <div class="overlay" id="startOverlay">
+      <div class="overlay-icon">⌨️</div>
+      <div class="overlay-title">Pronto para o desafio?</div>
+      <div class="overlay-sub">Termos reais de TI — redes, programação,<br>cloud, sistemas operacionais e muito mais.</div>
+      <button class="overlay-btn" id="startBtn">Iniciar →</button>
+    </div>
+  </div>
+
+  <!-- Category info -->
+  <div class="category-info" id="catInfo">categoria: <span id="catName">—</span></div>
+
+  <!-- Input -->
+  <div class="input-row">
+    <input
+      type="text"
+      class="typing-input"
+      id="typingInput"
+      placeholder="Digite aqui..."
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="off"
+      spellcheck="false"
+      disabled
+    >
+    <button class="restart-btn" id="restartBtn" title="Reiniciar (R)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+    </button>
+  </div>
+
+  <!-- Results panel -->
+  <div class="results-panel" id="resultsPanel">
+    <div>
+      <div class="result-title" id="resultTitle">Tempo esgotado!</div>
+      <div class="result-msg" id="resultMsg"></div>
+    </div>
+    <div class="results-grid">
+      <div class="result-card"><div class="result-val" id="rWpm">0</div><div class="result-label">WPM Final</div></div>
+      <div class="result-card"><div class="result-val green" id="rAcc">0%</div><div class="result-label">Precisão</div></div>
+      <div class="result-card"><div class="result-val yellow" id="rCorrect">0</div><div class="result-label">Corretas</div></div>
+      <div class="result-card"><div class="result-val red" id="rErrors">0</div><div class="result-label">Erros</div></div>
+    </div>
+    <div class="result-actions">
+      <button class="btn-primary" id="playAgainBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+        Jogar Novamente
+      </button>
+      <button class="btn-secondary" id="changeModeBtn">Trocar Modo</button>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>Feito por <a href="./index.html">Luiz Felipe Nascimento Mota</a> · JavaScript Vanilla · Portfólio LF.</p>
+</footer>
+
+<script>
+// ══════════════════════════════════════════════
+//  WORD BANK — Termos reais de TI por categoria
+// ══════════════════════════════════════════════
+const WORDS = {
+  redes: [
+    'firewall','gateway','router','switch','dhcp','dns','ipv4','ipv6','tcp','udp',
+    'vpn','vlan','subnet','proxy','nat','icmp','arp','ssid','bandwidth',
+    'latency','ping','traceroute','ethernet','packet','protocol','ospf','bgp',
+    'mac-address','broadcast','multicast','wireshark','topology','hub'
+  ],
+  sistemas: [
+    'kernel','linux','ubuntu','bash','root','chmod','sudo','cron','daemon',
+    'process','thread','ram','swap','disk','partition','grub','ssh','scp',
+    'docker','container','vm','hypervisor','bios','uefi','windows','registry',
+    'active-directory','gpo','ldap','powershell','terminal','cli'
+  ],
+  cloud: [
+    'aws','azure','cloud','s3','ec2','iam','vpc','lambda','rds','api',
+    'devops','cicd','kubernetes','terraform','ansible','cloudformation',
+    'serverless','microservice','loadbalancer','autoscaling','monitoring',
+    'logging','bucket','snapshot','region','availability-zone'
+  ],
+  dev: [
+    'html','css','javascript','python','java','sql','git','github','api',
+    'rest','json','xml','http','https','debug','refactor','deploy','backend',
+    'frontend','framework','library','database','query','loop','function',
+    'variable','boolean','integer','string','array','object','class'
+  ],
+  seguranca: [
+    'criptografia','hash','ssl','tls','certificate','malware','ransomware',
+    'phishing','antivirus','backup','vulnerability','patch','exploit','audit',
+    'authentication','authorization','2fa','token','encryption','penetration',
+    'zero-day','brute-force','spoofing','injection','csrf','xss'
+  ],
+  suporte: [
+    'helpdesk','ticket','incident','sla','itil','cmdb','change','problem',
+    'escalation','remote','teamviewer','anydesk','vnc','bios','driver',
+    'update','reinstall','reboot','network','printer','monitor','keyboard',
+    'log','event-viewer','task-manager','msconfig','ping','ipconfig'
+  ]
+};
+
+const CATEGORIES = Object.keys(WORDS);
+const ALL_WORDS = CATEGORIES.flatMap(c => WORDS[c]);
+
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+let state = {
+  mode: 30,          // seconds or 'zen'
+  words: [],
+  current: 0,
+  correct: 0,
+  errors: 0,
+  started: false,
+  finished: false,
+  timeLeft: 30,
+  totalTime: 30,
+  timerInterval: null,
+  startTime: null,
+  currentCategory: '—',
+  zenWords: 0,
+};
+
+// DOM refs
+const wordDisplay  = document.getElementById('wordDisplay');
+const typingInput  = document.getElementById('typingInput');
+const startOverlay = document.getElementById('startOverlay');
+const resultsPanel = document.getElementById('resultsPanel');
+const statWpm      = document.getElementById('statWpm');
+const statAcc      = document.getElementById('statAcc');
+const statCorrect  = document.getElementById('statCorrect');
+const statErrors   = document.getElementById('statErrors');
+const timerNum     = document.getElementById('timerNum');
+const timerRing    = document.getElementById('timerRing');
+const progressBar  = document.getElementById('progressBar');
+const catName      = document.getElementById('catName');
+const startBtn     = document.getElementById('startBtn');
+const restartBtn   = document.getElementById('restartBtn');
+const playAgainBtn = document.getElementById('playAgainBtn');
+const changeModeBtn= document.getElementById('changeModeBtn');
+const CIRC = 2 * Math.PI * 35; // 220
+
+// ══════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════
+function shuffle(arr) {
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+function pickWords(count = 60) {
+  // mix categories
+  const cat = CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)];
+  state.currentCategory = cat;
+  catName.textContent = cat;
+  // 60% from category, 40% mixed
+  const catWords  = shuffle(WORDS[cat]).slice(0, Math.ceil(count * .6));
+  const restWords = shuffle(ALL_WORDS.filter(w => !catWords.includes(w))).slice(0, count - catWords.length);
+  return shuffle([...catWords, ...restWords]);
+}
+
+function renderWords() {
+  wordDisplay.innerHTML = '';
+  state.words.forEach((word, i) => {
+    const span = document.createElement('span');
+    span.className = 'word-token ' + (
+      i < state.current  ? (state.wordResults?.[i] === 'error' ? 'error' : 'done') :
+      i === state.current ? 'current' : 'pending'
+    );
+    span.textContent = word;
+    span.id = 'word-' + i;
+    wordDisplay.appendChild(span);
+  });
+  // scroll current into view
+  const cur = document.getElementById('word-' + state.current);
+  if(cur) cur.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+
+function updateStats() {
+  const elapsed = state.startTime ? (Date.now() - state.startTime) / 60000 : 0;
+  const wpm = elapsed > 0 ? Math.round(state.correct / elapsed) : 0;
+  const total = state.correct + state.errors;
+  const acc = total > 0 ? Math.round((state.correct / total) * 100) : 100;
+
+  statWpm.textContent     = wpm;
+  statCorrect.textContent = state.correct;
+  statErrors.textContent  = state.errors;
+  statAcc.textContent     = total > 0 ? acc + '%' : '—';
+
+  // progress bar (words done / total)
+  const pct = Math.min((state.current / state.words.length) * 100, 100);
+  progressBar.style.width = pct + '%';
+
+  return { wpm, acc };
+}
+
+function updateTimer() {
+  if(state.mode === 'zen') {
+    timerNum.textContent = '∞';
+    timerRing.style.strokeDashoffset = 0;
+    timerRing.style.stroke = 'var(--accent)';
+    return;
+  }
+  timerNum.textContent = state.timeLeft;
+  const pct = state.timeLeft / state.totalTime;
+  timerRing.style.strokeDasharray  = CIRC;
+  timerRing.style.strokeDashoffset = CIRC * (1 - pct);
+  timerRing.style.stroke = pct > .5 ? 'var(--accent)' : pct > .25 ? 'var(--yellow)' : 'var(--red)';
+  timerNum.style.color   = pct > .5 ? 'var(--accent)' : pct > .25 ? 'var(--yellow)' : 'var(--red)';
+}
+
+// ══════════════════════════════════════════════
+//  GAME FLOW
+// ══════════════════════════════════════════════
+function initGame() {
+  clearInterval(state.timerInterval);
+  state.words       = pickWords(80);
+  state.wordResults = [];
+  state.current     = 0;
+  state.correct     = 0;
+  state.errors      = 0;
+  state.started     = false;
+  state.finished    = false;
+  state.timeLeft    = state.mode === 'zen' ? Infinity : state.mode;
+  state.totalTime   = state.mode === 'zen' ? Infinity : state.mode;
+  state.startTime   = null;
+
+  renderWords();
+  updateTimer();
+  updateStats();
+
+  typingInput.value = '';
+  typingInput.disabled = false;
+  typingInput.className = 'typing-input';
+  typingInput.placeholder = 'Digite aqui...';
+
+  resultsPanel.classList.remove('show');
+  startOverlay.style.display = 'none';
+  progressBar.style.width = '0%';
+
+  typingInput.focus();
+}
+
+function startTimer() {
+  if(state.mode === 'zen') return;
+  state.timerInterval = setInterval(() => {
+    state.timeLeft--;
+    updateTimer();
+    if(state.timeLeft <= 0) endGame();
+  }, 1000);
+}
+
+function endGame() {
+  clearInterval(state.timerInterval);
+  state.finished = true;
+  typingInput.disabled = true;
+
+  const { wpm, acc } = updateStats();
+
+  // populate results
+  document.getElementById('rWpm').textContent     = wpm;
+  document.getElementById('rAcc').textContent     = acc + '%';
+  document.getElementById('rCorrect').textContent = state.correct;
+  document.getElementById('rErrors').textContent  = state.errors;
+
+  const title = wpm >= 60 ? '🔥 Incrível!' : wpm >= 40 ? '✅ Bom trabalho!' : wpm >= 20 ? '💪 Continue praticando!' : '🐢 Vamos aquecer!';
+  const msg   = `Você digitou ${state.correct} termos de TI corretamente com ${acc}% de precisão${state.mode !== 'zen' ? ` em ${state.totalTime} segundos` : ''}.`;
+
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultMsg').textContent   = msg;
+
+  resultsPanel.classList.add('show');
+  resultsPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ══════════════════════════════════════════════
+//  INPUT HANDLER
+// ══════════════════════════════════════════════
+typingInput.addEventListener('input', () => {
+  if(state.finished) return;
+
+  // start on first keystroke
+  if(!state.started) {
+    state.started   = true;
+    state.startTime = Date.now();
+    startTimer();
+  }
+
+  const val     = typingInput.value;
+  const target  = state.words[state.current];
+
+  // space or correct word submitted
+  if(val.endsWith(' ') || val === target) {
+    const typed = val.trim();
+    if(typed === target) {
+      state.wordResults[state.current] = 'correct';
+      state.correct++;
+    } else {
+      state.wordResults[state.current] = 'error';
+      state.errors++;
+    }
+    state.current++;
+    typingInput.value = '';
+    typingInput.className = 'typing-input';
+
+    // add more words if running low
+    if(state.current >= state.words.length - 15) {
+      const more = pickWords(40);
+      state.words.push(...more);
+    }
+
+    // zen mode: end after 50 words
+    if(state.mode === 'zen' && state.current >= 50) endGame();
+
+    renderWords();
+    updateStats();
+    return;
+  }
+
+  // live coloring
+  const isCorrect = target.startsWith(val);
+  typingInput.className = 'typing-input ' + (val.length === 0 ? '' : isCorrect ? 'correct' : 'wrong');
+  updateStats();
+});
+
+// backspace clears wrong state
+typingInput.addEventListener('keydown', e => {
+  if(e.key === 'Escape') restartGame();
+});
+
+// ══════════════════════════════════════════════
+//  MODE BUTTONS
+// ══════════════════════════════════════════════
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const m = btn.dataset.mode;
+    state.mode = m === 'zen' ? 'zen' : parseInt(m);
+    showStartOverlay();
+  });
+});
+
+// ══════════════════════════════════════════════
+//  RESTART / START
+// ══════════════════════════════════════════════
+function showStartOverlay() {
+  clearInterval(state.timerInterval);
+  state.words       = pickWords(80);
+  state.wordResults = [];
+  state.current     = 0;
+  state.correct     = 0;
+  state.errors      = 0;
+  state.started     = false;
+  state.finished    = false;
+  state.timeLeft    = state.mode === 'zen' ? Infinity : state.mode;
+  state.totalTime   = state.mode === 'zen' ? Infinity : state.mode;
+  state.startTime   = null;
+  renderWords();
+  updateTimer();
+  updateStats();
+  typingInput.disabled = true;
+  typingInput.value = '';
+  typingInput.className = 'typing-input';
+  resultsPanel.classList.remove('show');
+  startOverlay.style.display = 'flex';
+  progressBar.style.width = '0%';
+}
+
+function restartGame() {
+  showStartOverlay();
+}
+
+startBtn.addEventListener('click', () => { startOverlay.style.display = 'none'; typingInput.disabled = false; typingInput.focus(); });
+restartBtn.addEventListener('click', restartGame);
+playAgainBtn.addEventListener('click', () => { restartGame(); });
+changeModeBtn.addEventListener('click', () => { resultsPanel.classList.remove('show'); showStartOverlay(); });
+
+// keyboard shortcut R to restart
+document.addEventListener('keydown', e => {
+  if(e.key === 'r' && !state.started && e.target !== typingInput) restartGame();
+  if(e.key === 'Enter' && startOverlay.style.display !== 'none') {
+    startOverlay.style.display = 'none';
+    typingInput.disabled = false;
+    typingInput.focus();
+  }
+});
+
+// ══════════════════════════════════════════════
+//  BLOB CURSOR
+// ══════════════════════════════════════════════
+const blob = document.getElementById('blob');
+document.addEventListener('mousemove', e => { blob.style.left=e.clientX+'px'; blob.style.top=e.clientY+'px'; });
+if(window.matchMedia('(pointer:coarse)').matches) blob.style.display='none';
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+showStartOverlay();
+</script>
+</body>
+</html>
