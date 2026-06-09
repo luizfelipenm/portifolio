@@ -552,6 +552,9 @@
     }
     .contact-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
     .contact-value { font-size: 14px; font-weight: 500; color: var(--text); margin-top: 2px; }
+    .contact-ico svg { width: 24px; height: 24px; transition: transform 0.35s ease; }
+    .contact-item:hover .contact-ico svg { transform: scale(1.22) rotate(-6deg); }
+    .contact-item:hover .contact-ico.icon-bounce svg { animation: iconBounce 0.4s ease forwards; transform: none; }
 
     /* ── FOOTER ── */
     footer {
@@ -1175,29 +1178,60 @@
     <h2 class="section-title">Contato</h2>
   </div>
   <div class="contact-grid reveal">
+    <!-- Telefone -->
     <a href="tel:+5561991547238" class="contact-item">
-      <div class="contact-ico">📞</div>
+      <div class="contact-ico icon-bounce">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 4h4l2 5-2.5 1.5a14 14 0 006 6L20 14l5 2v4c0 1.1-.9 2-2 2C10.4 22 4 10.6 4 6c0-1.1.9-2 2-2h3z" stroke="#00d4ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M22 4a6 6 0 016 6" stroke="#00ff9d" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M22 8a2 2 0 012 2" stroke="#00ff9d" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
       <div>
         <div class="contact-label">Telefone</div>
         <div class="contact-value">+55 (61) 99154-7238</div>
       </div>
     </a>
+
+    <!-- E-mail -->
     <a href="mailto:luizfelipenascimentomota17@gmail.com" class="contact-item">
-      <div class="contact-ico">✉️</div>
+      <div class="contact-ico icon-bounce">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="7" width="26" height="18" rx="3" stroke="#00d4ff" stroke-width="1.8"/>
+          <path d="M3 10l13 8 13-8" stroke="#00d4ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3 10l9 7M29 10l-9 7" stroke="#00ff9d" stroke-width="1" stroke-linecap="round" opacity=".5"/>
+        </svg>
+      </div>
       <div>
         <div class="contact-label">E-mail</div>
         <div class="contact-value">luizfelipenascimentomota17@gmail.com</div>
       </div>
     </a>
+
+    <!-- LinkedIn -->
     <a href="https://www.linkedin.com/in/luizfelipenm/" target="_blank" class="contact-item">
-      <div class="contact-ico">💼</div>
+      <div class="contact-ico icon-bounce">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="28" height="28" rx="6" fill="#0a66c2"/>
+          <rect x="7" y="13" width="4" height="12" rx="1" fill="#fff"/>
+          <circle cx="9" cy="9" r="2.2" fill="#fff"/>
+          <path d="M17 13h3.5a4.5 4.5 0 014.5 4.5V25h-4v-6.5a1.5 1.5 0 00-1.5-1.5H17v-4z" fill="#fff"/>
+        </svg>
+      </div>
       <div>
         <div class="contact-label">LinkedIn</div>
         <div class="contact-value">linkedin.com/in/luizfelipenm</div>
       </div>
     </a>
+
+    <!-- Localização -->
     <div class="contact-item" style="cursor:default;">
-      <div class="contact-ico">📍</div>
+      <div class="contact-ico icon-bounce">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 3a9 9 0 019 9c0 6-9 17-9 17S7 18 7 12a9 9 0 019-9z" stroke="#00d4ff" stroke-width="1.8" stroke-linejoin="round"/>
+          <circle cx="16" cy="12" r="3" stroke="#00ff9d" stroke-width="1.8"/>
+        </svg>
+      </div>
       <div>
         <div class="contact-label">Localização</div>
         <div class="contact-value">Brasília, DF</div>
@@ -1225,6 +1259,10 @@
     navDrawer.classList.remove('open');
     document.body.style.overflow = '';
   }
+  // Fechar ao clicar fora dos links (no fundo do drawer)
+  navDrawer.addEventListener('click', e => {
+    if (e.target === navDrawer) closeDrawer();
+  });
 
   // Cursor glow (only desktop)
   const glow = document.getElementById('cursorGlow');
