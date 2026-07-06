@@ -125,3 +125,50 @@
       a.style.color = a.getAttribute('href') === '#' + current ? 'var(--accent)' : '';
     });
   });
+
+// ══════════════════════════════════════════════
+//  BOOT SCREEN — roda 1x por sessão
+// ══════════════════════════════════════════════
+(function () {
+  const screen = document.getElementById('bootScreen');
+  if (!screen) return;
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let jaBotou = false;
+  try { jaBotou = sessionStorage.getItem('lf-boot') === '1'; } catch (e) {}
+
+  // já viu o boot nesta sessão (ou prefere menos animação): pula direto
+  if (jaBotou || reduced) { screen.classList.add('hidden'); return; }
+
+  const log = document.getElementById('bootLog');
+  const LINES = [
+    ['info', 'LF-BIOS v1.0 — Luiz Felipe Nascimento Mota'],
+    ['',     'Verificando hardware................ OK'],
+    ['ok',   '[ OK ] módulo carregado: help-desk'],
+    ['ok',   '[ OK ] módulo carregado: redes & infraestrutura'],
+    ['ok',   '[ OK ] módulo carregado: javascript-vanilla'],
+    ['ok',   '[ OK ] café no sistema ☕'],
+    ['w',    'Iniciando portfólio...'],
+  ];
+
+  let i = 0;
+  const iv = setInterval(() => {
+    const [cls, txt] = LINES[i++];
+    const div = document.createElement('div');
+    if (cls) div.className = cls;
+    div.textContent = txt;
+    log.appendChild(div);
+    if (i >= LINES.length) { clearInterval(iv); setTimeout(encerrar, 420); }
+  }, 210);
+
+  function encerrar() {
+    clearInterval(iv);
+    try { sessionStorage.setItem('lf-boot', '1'); } catch (e) {}
+    screen.classList.add('off');
+    setTimeout(() => screen.classList.add('hidden'), 500);
+  }
+
+  // clique ou tecla pula o boot
+  screen.addEventListener('click', encerrar);
+  document.addEventListener('keydown', encerrar, { once: true });
+})();

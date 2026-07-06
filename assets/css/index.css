@@ -749,3 +749,57 @@ footer span { color: var(--accent); }
   .hero-name { font-size: 30px; }
   .btn-primary, .btn-secondary { padding: 12px 20px; font-size: 13px; }
 }
+
+/* ── BOOT SCREEN ── */
+.boot-screen {
+  position: fixed; inset: 0;
+  background: var(--bg);
+  z-index: 99999;
+  display: flex;
+  align-items: flex-start;
+  padding: 40px;
+  cursor: pointer;
+  transition: opacity .45s ease;
+}
+.boot-screen.off { opacity: 0; pointer-events: none; }
+.boot-screen.hidden { display: none; }
+.boot-log {
+  font-family: 'Space Mono', monospace, monospace;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--muted);
+  white-space: pre-wrap;
+}
+.boot-log .ok   { color: var(--accent2); }
+.boot-log .info { color: var(--accent); }
+.boot-log .w    { color: #fff; }
+@media (max-width: 600px) {
+  .boot-screen { padding: 24px 16px; }
+  .boot-log { font-size: 11px; }
+}
+
+/* ── SEÇÃO "AGORA" ── */
+.now-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+  padding: 9px 16px;
+  background: var(--card, #0d1f2d);
+  border: 1px solid var(--border, rgba(0,212,255,0.15));
+  border-radius: 100px;
+  font-size: 13px;
+  color: var(--muted, #6a8fa8);
+}
+.now-box b { color: var(--accent2, #00ff9d); font-weight: 600; }
+.now-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent2, #00ff9d);
+  flex-shrink: 0;
+  animation: nowPulse 2s ease-in-out infinite;
+}
+@keyframes nowPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,157,.5); }
+  50%      { box-shadow: 0 0 0 6px rgba(0,255,157,0); }
+}

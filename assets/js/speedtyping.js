@@ -365,3 +365,37 @@ if(window.matchMedia('(pointer:coarse)').matches) blob.style.display='none';
 //  INIT
 // ══════════════════════════════════════════════
 showStartOverlay();
+
+// ══════════════════════════════════════════════
+//  COMPARTILHAR RESULTADO
+// ══════════════════════════════════════════════
+const shareBtn = document.getElementById('shareBtn');
+if (shareBtn) {
+  shareBtn.addEventListener('click', async () => {
+    const wpm = document.getElementById('rWpm').textContent;
+    const acc = document.getElementById('rAcc').textContent;
+    const modo = state.mode === 'zen' ? 'modo zen' : `modo ${state.totalTime}s`;
+    const texto = `⌨️ Fiz ${wpm} WPM com ${acc} de precisão no Speed Typing (${modo})! Consegue me superar?`;
+    const url = window.location.href;
+
+    // celular: abre o menu nativo de compartilhamento
+    if (navigator.share) {
+      try { await navigator.share({ text: texto, url }); } catch (e) { /* usuário cancelou */ }
+      return;
+    }
+    // desktop: copia para a área de transferência
+    try {
+      await navigator.clipboard.writeText(`${texto} ${url}`);
+      feedbackShare('Copiado! ✅');
+    } catch (e) {
+      feedbackShare('Não foi possível copiar');
+    }
+  });
+}
+
+function feedbackShare(msg) {
+  const original = shareBtn.innerHTML;
+  shareBtn.textContent = msg;
+  shareBtn.disabled = true;
+  setTimeout(() => { shareBtn.innerHTML = original; shareBtn.disabled = false; }, 1800);
+}
