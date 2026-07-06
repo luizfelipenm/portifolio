@@ -210,16 +210,15 @@
     .mode-btn:hover  { border-color: var(--accent); color: var(--text); }
     .mode-btn.active { border-color: var(--accent); color: var(--accent); background: var(--glow); }
 
-    /* ── WORD DISPLAY ── */
+    /* ── WORD DISPLAY (uma palavra por vez) ── */
     .word-display-wrap {
       width: 100%;
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 28px 32px;
-      min-height: 110px;
-      display: flex; align-items: center;
-      flex-wrap: wrap; gap: 10px;
+      min-height: 160px;
+      display: flex; align-items: center; justify-content: center;
       position: relative;
       overflow: hidden;
     }
@@ -230,26 +229,45 @@
       background: linear-gradient(90deg, var(--accent), var(--accent2));
       border-radius: 16px 16px 0 0;
     }
-    .word-token {
-      font-family: 'Space Mono', monospace;
-      font-size: 18px; letter-spacing: 1px;
-      padding: 2px 4px; border-radius: 4px;
-      transition: color .1s, background .1s;
-      white-space: nowrap;
-    }
-    .word-token.done    { color: var(--accent2); }
-    .word-token.error   { color: var(--red); background: rgba(255,77,109,.1); text-decoration: underline; }
-    .word-token.current { color: #fff; }
-    .word-token.pending { color: var(--muted); }
 
-    /* cursor blink on current word */
-    .word-token.current::after {
-      content: '|';
-      color: var(--accent);
+    .word-single {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(28px, 6vw, 48px);
+      font-weight: 700;
+      letter-spacing: 2px;
+      display: flex;
+      animation: wordPop .25s ease both;
+    }
+    @keyframes wordPop {
+      from { opacity: 0; transform: translateY(14px) scale(.96); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* letras coloridas conforme digita */
+    .letter          { color: var(--muted); transition: color .08s; }
+    .letter.ok       { color: var(--accent2); }
+    .letter.bad      { color: var(--red); text-decoration: underline; }
+    .letter.next     { color: #fff; position: relative; }
+    .letter.next::before {
+      content: '';
+      position: absolute; left: -2px; top: 8%;
+      width: 2px; height: 84%;
+      background: var(--accent);
       animation: blink .8s step-end infinite;
-      margin-left: 1px;
     }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* próxima palavra (dica pequena embaixo) */
+    .word-next-hint {
+      position: absolute;
+      bottom: 12px; left: 0; right: 0;
+      text-align: center;
+      font-family: 'Space Mono', monospace;
+      font-size: 12px; letter-spacing: 2px;
+      color: var(--muted);
+      opacity: .55;
+    }
+    .word-next-hint span { color: var(--accent); opacity: .8; }
 
     /* ── INPUT ── */
     .input-row {
@@ -421,8 +439,8 @@
     @media (max-width: 600px) {
       nav { padding: 12px 20px; }
       main { padding: 32px 16px 48px; }
-      .word-display-wrap { padding: 20px; }
-      .word-token { font-size: 15px; }
+      .word-display-wrap { padding: 20px; min-height: 130px; }
+      .word-single { font-size: 30px; letter-spacing: 1px; }
       .typing-input { font-size: 14px; }
       .stats-bar { gap: 10px; }
       .stat-value { font-size: 22px; }
@@ -659,19 +677,44 @@ function pickWords(count = 60) {
 
 function renderWords() {
   wordDisplay.innerHTML = '';
-  state.words.forEach((word, i) => {
-    const span = document.createElement('span');
-    span.className = 'word-token ' + (
-      i < state.current  ? (state.wordResults?.[i] === 'error' ? 'error' : 'done') :
-      i === state.current ? 'current' : 'pending'
-    );
-    span.textContent = word;
-    span.id = 'word-' + i;
-    wordDisplay.appendChild(span);
+  const word = state.words[state.current];
+  if(!word) return;
+
+  // palavra atual, letra por letra
+  const wordEl = document.createElement('div');
+  wordEl.className = 'word-single';
+  [...word].forEach(ch => {
+    const s = document.createElement('span');
+    s.className = 'letter';
+    s.textContent = ch;
+    wordEl.appendChild(s);
   });
-  // scroll current into view
-  const cur = document.getElementById('word-' + state.current);
-  if(cur) cur.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  wordDisplay.appendChild(wordEl);
+
+  // dica da próxima palavra
+  const next = state.words[state.current + 1];
+  if(next) {
+    const hint = document.createElement('div');
+    hint.className = 'word-next-hint';
+    hint.innerHTML = 'próxima: <span></span>';
+    hint.querySelector('span').textContent = next;
+    wordDisplay.appendChild(hint);
+  }
+
+  colorLetters(typingInput.value);
+}
+
+// colore as letras da palavra atual conforme o que foi digitado
+function colorLetters(val) {
+  const letters = wordDisplay.querySelectorAll('.word-single .letter');
+  letters.forEach((el, i) => {
+    el.className = 'letter';
+    if(i < val.length) {
+      el.classList.add(val[i] === el.textContent ? 'ok' : 'bad');
+    } else if(i === val.length) {
+      el.classList.add('next');
+    }
+  });
 }
 
 function updateStats() {
@@ -818,6 +861,7 @@ typingInput.addEventListener('input', () => {
   // live coloring
   const isCorrect = target.startsWith(val);
   typingInput.className = 'typing-input ' + (val.length === 0 ? '' : isCorrect ? 'correct' : 'wrong');
+  colorLetters(val);
   updateStats();
 });
 
