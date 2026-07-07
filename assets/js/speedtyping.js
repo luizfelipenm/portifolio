@@ -367,35 +367,165 @@ if(window.matchMedia('(pointer:coarse)').matches) blob.style.display='none';
 showStartOverlay();
 
 // ══════════════════════════════════════════════
-//  COMPARTILHAR RESULTADO
+//  COMPARTILHAR RESULTADO — imagem p/ stories
+//  (1080x1920 · Instagram / WhatsApp)
 // ══════════════════════════════════════════════
 const shareBtn = document.getElementById('shareBtn');
+const SITE_URL = 'luizfelipenm.github.io/portifolio';
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+async function gerarImagemStory() {
+  // garante que as fontes do site estão prontas no canvas
+  await Promise.all([
+    document.fonts.load('800 200px Syne'),
+    document.fonts.load('700 44px "Space Mono"'),
+    document.fonts.load('400 34px "Space Mono"'),
+  ]).catch(() => {});
+
+  const wpm     = document.getElementById('rWpm').textContent;
+  const acc     = document.getElementById('rAcc').textContent;
+  const certas  = document.getElementById('rCorrect').textContent;
+  const modo    = state.mode === 'zen' ? 'ZEN' : state.totalTime + 'S';
+
+  const W = 1080, H = 1920;
+  const cv = document.createElement('canvas');
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+
+  // ── fundo ──
+  ctx.fillStyle = '#050a0e';
+  ctx.fillRect(0, 0, W, H);
+
+  // grade sutil
+  ctx.strokeStyle = 'rgba(0,212,255,0.05)';
+  ctx.lineWidth = 1;
+  for (let gx = 0; gx <= W; gx += 72) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke(); }
+  for (let gy = 0; gy <= H; gy += 72) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke(); }
+
+  // brilhos radiais
+  let g = ctx.createRadialGradient(220, 260, 0, 220, 260, 900);
+  g.addColorStop(0, 'rgba(0,212,255,0.16)'); g.addColorStop(1, 'transparent');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  g = ctx.createRadialGradient(900, 1700, 0, 900, 1700, 900);
+  g.addColorStop(0, 'rgba(0,255,157,0.12)'); g.addColorStop(1, 'transparent');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+
+  ctx.textAlign = 'center';
+
+  // ── topo: marca ──
+  ctx.fillStyle = '#00d4ff';
+  ctx.font = '800 84px Syne, sans-serif';
+  ctx.fillText('LF.', W / 2, 250);
+  ctx.fillStyle = '#00ff9d';
+  ctx.font = '700 40px "Space Mono", monospace';
+  ctx.fillText('//  S P E E D   T Y P I N G', W / 2, 340);
+
+  // ── card central ──
+  const cx = 80, cw = W - 160, cy = 480, ch = 880;
+  ctx.fillStyle = '#0d1f2d';
+  roundRect(ctx, cx, cy, cw, ch, 36); ctx.fill();
+  ctx.strokeStyle = 'rgba(0,212,255,0.4)';
+  ctx.lineWidth = 3;
+  roundRect(ctx, cx, cy, cw, ch, 36); ctx.stroke();
+  // linha gradiente no topo do card
+  g = ctx.createLinearGradient(cx, 0, cx + cw, 0);
+  g.addColorStop(0, '#00d4ff'); g.addColorStop(1, '#00ff9d');
+  ctx.fillStyle = g;
+  ctx.fillRect(cx + 36, cy, cw - 72, 6);
+
+  // WPM gigante com gradiente
+  g = ctx.createLinearGradient(0, cy + 150, 0, cy + 420);
+  g.addColorStop(0, '#00d4ff'); g.addColorStop(1, '#00ff9d');
+  ctx.fillStyle = g;
+  ctx.font = '800 300px Syne, sans-serif';
+  ctx.fillText(wpm, W / 2, cy + 400);
+
+  ctx.fillStyle = '#6a8fa8';
+  ctx.font = '700 38px "Space Mono", monospace';
+  ctx.fillText('PALAVRAS POR MINUTO', W / 2, cy + 480);
+
+  // divisor
+  ctx.strokeStyle = 'rgba(0,212,255,0.15)';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(cx + 80, cy + 560); ctx.lineTo(cx + cw - 80, cy + 560); ctx.stroke();
+
+  // linha de stats: precisão · corretas · modo
+  const stats = [
+    [acc,    'PRECISÃO', '#00ff9d'],
+    [certas, 'CORRETAS', '#ffd166'],
+    [modo,   'MODO',     '#00d4ff'],
+  ];
+  const colW = cw / 3;
+  stats.forEach(([val, label, cor], i) => {
+    const sx = cx + colW * i + colW / 2;
+    ctx.fillStyle = cor;
+    ctx.font = '700 92px "Space Mono", monospace';
+    ctx.fillText(val, sx, cy + 710);
+    ctx.fillStyle = '#6a8fa8';
+    ctx.font = '400 30px "Space Mono", monospace';
+    ctx.fillText(label, sx, cy + 770);
+  });
+
+  // ── desafio (estilo prompt) ──
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '800 62px Syne, sans-serif';
+  ctx.fillText('Consegue me superar?', W / 2, 1520);
+  ctx.fillStyle = '#00ff9d';
+  ctx.font = '400 36px "Space Mono", monospace';
+  ctx.fillText('~$ aceite o desafio_', W / 2, 1595);
+
+  // ── rodapé: url ──
+  ctx.fillStyle = '#0d1f2d';
+  roundRect(ctx, W / 2 - 400, 1680, 800, 90, 45); ctx.fill();
+  ctx.strokeStyle = 'rgba(0,212,255,0.35)';
+  ctx.lineWidth = 2;
+  roundRect(ctx, W / 2 - 400, 1680, 800, 90, 45); ctx.stroke();
+  ctx.fillStyle = '#00d4ff';
+  ctx.font = '700 32px "Space Mono", monospace';
+  ctx.fillText(SITE_URL, W / 2, 1738);
+
+  return new Promise(res => cv.toBlob(res, 'image/png'));
+}
+
 if (shareBtn) {
   shareBtn.addEventListener('click', async () => {
-    const wpm = document.getElementById('rWpm').textContent;
-    const acc = document.getElementById('rAcc').textContent;
-    const modo = state.mode === 'zen' ? 'modo zen' : `modo ${state.totalTime}s`;
-    const texto = `⌨️ Fiz ${wpm} WPM com ${acc} de precisão no Speed Typing (${modo})! Consegue me superar?`;
-    const url = window.location.href;
-
-    // celular: abre o menu nativo de compartilhamento
-    if (navigator.share) {
-      try { await navigator.share({ text: texto, url }); } catch (e) { /* usuário cancelou */ }
-      return;
-    }
-    // desktop: copia para a área de transferência
+    shareBtn.disabled = true;
     try {
-      await navigator.clipboard.writeText(`${texto} ${url}`);
-      feedbackShare('Copiado! ✅');
+      const blob = await gerarImagemStory();
+      const file = new File([blob], 'speedtyping-lf.png', { type: 'image/png' });
+      const texto = `⌨️ Fiz ${document.getElementById('rWpm').textContent} WPM no Speed Typing! Consegue me superar? https://${SITE_URL}`;
+
+      // celular: compartilha a imagem direto (Instagram, WhatsApp...)
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file], text: texto }); } catch (e) { /* cancelou */ }
+      } else {
+        // desktop: baixa a imagem e copia o texto
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'speedtyping-lf.png';
+        a.click();
+        URL.revokeObjectURL(a.href);
+        try { await navigator.clipboard.writeText(texto); } catch (e) {}
+        feedbackShare('Imagem baixada! ✅');
+      }
     } catch (e) {
-      feedbackShare('Não foi possível copiar');
+      feedbackShare('Ops, algo falhou');
     }
+    shareBtn.disabled = false;
   });
 }
 
 function feedbackShare(msg) {
   const original = shareBtn.innerHTML;
   shareBtn.textContent = msg;
-  shareBtn.disabled = true;
-  setTimeout(() => { shareBtn.innerHTML = original; shareBtn.disabled = false; }, 1800);
+  setTimeout(() => { shareBtn.innerHTML = original; }, 2000);
 }
