@@ -2,7 +2,7 @@
 
 Portfólio pessoal construído do zero com **HTML, CSS e JavaScript vanilla** — sem frameworks, sem bibliotecas.
 
-🔗 **[Ver ao vivo](https://SEU-USUARIO.github.io/portifolio/)** *(atualize este link)*
+🔗 **[Ver ao vivo](https://luizfelipenm.dev)**
 
 ## Páginas
 
@@ -38,7 +38,7 @@ Portfólio pessoal construído do zero com **HTML, CSS e JavaScript vanilla** �
 Basta clonar e abrir o `index.html` no navegador:
 
 ```bash
-git clone https://github.com/SEU-USUARIO/portifolio.git
+git clone https://github.com/luizfelipenm/portifolio.git
 cd portifolio
 ```
 

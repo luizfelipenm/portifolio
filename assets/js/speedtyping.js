@@ -371,7 +371,7 @@ showStartOverlay();
 //  (1080x1920 · Instagram / WhatsApp)
 // ══════════════════════════════════════════════
 const shareBtn = document.getElementById('shareBtn');
-const SITE_URL = 'luizfelipenm.github.io/portifolio';
+const SITE_URL = 'luizfelipenm.dev/speedtyping.html';
 
 function roundRect(ctx, x, y, w, h, r) {
   ctx.beginPath();
@@ -381,6 +381,18 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.arcTo(x, y + h, x, y, r);
   ctx.arcTo(x, y, x + w, y, r);
   ctx.closePath();
+}
+
+
+// reduz a fonte até o texto caber na largura máxima
+function fitText(ctx, texto, pesoFonte, tamMax, larguraMax) {
+  let tam = tamMax;
+  do {
+    ctx.font = pesoFonte.replace('{S}', tam);
+    if (ctx.measureText(texto).width <= larguraMax) break;
+    tam -= 2;
+  } while (tam > 20);
+  return tam;
 }
 
 async function gerarImagemStory() {
@@ -477,7 +489,7 @@ async function gerarImagemStory() {
 
   // ── desafio (estilo prompt) ──
   ctx.fillStyle = '#ffffff';
-  ctx.font = '800 62px Syne, sans-serif';
+  fitText(ctx, 'Consegue me superar?', '800 {S}px Syne, sans-serif', 62, 920);
   ctx.fillText('Consegue me superar?', W / 2, 1520);
   ctx.fillStyle = '#00ff9d';
   ctx.font = '400 36px "Space Mono", monospace';
@@ -490,7 +502,7 @@ async function gerarImagemStory() {
   ctx.lineWidth = 2;
   roundRect(ctx, W / 2 - 400, 1680, 800, 90, 45); ctx.stroke();
   ctx.fillStyle = '#00d4ff';
-  ctx.font = '700 32px "Space Mono", monospace';
+  fitText(ctx, SITE_URL, '700 {S}px "Space Mono", monospace', 32, 720);
   ctx.fillText(SITE_URL, W / 2, 1738);
 
   return new Promise(res => cv.toBlob(res, 'image/png'));
