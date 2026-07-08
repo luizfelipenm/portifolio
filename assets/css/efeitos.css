@@ -1,0 +1,90 @@
+/* ══════════════════════════════════════════════
+   EFEITOS GLOBAIS — Konami, Matrix, CRT e cursor
+   Compartilhado por todas as páginas
+   ══════════════════════════════════════════════ */
+
+/* ── Cursor crosshair em elementos interativos (só desktop) ── */
+@media (pointer: fine) {
+  a, button, .chip, .mode-btn, input[type="button"], [role="button"] {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'%3E%3Cg stroke='%2300d4ff' stroke-width='2' stroke-linecap='round'%3E%3Cline x1='13' y1='1' x2='13' y2='8'/%3E%3Cline x1='13' y1='18' x2='13' y2='25'/%3E%3Cline x1='1' y1='13' x2='8' y2='13'/%3E%3Cline x1='18' y1='13' x2='25' y2='13'/%3E%3C/g%3E%3Ccircle cx='13' cy='13' r='2.5' fill='%2300ff9d'/%3E%3C/svg%3E") 13 13, pointer;
+  }
+}
+
+/* ── Partículas do rastro do cursor ── */
+.trail-dot {
+  position: fixed;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--accent, #00d4ff);
+  pointer-events: none;
+  z-index: 9998;
+  animation: trailFade .6s ease-out forwards;
+}
+.trail-dot.g { background: var(--accent2, #00ff9d); }
+@keyframes trailFade {
+  from { opacity: .7; transform: scale(1); }
+  to   { opacity: 0;  transform: scale(.15) translateY(6px); }
+}
+
+/* ── Chuva Matrix (canvas) ── */
+.matrix-canvas {
+  position: fixed; inset: 0;
+  z-index: 9995;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .6s ease;
+}
+body.modo-hacker .matrix-canvas { opacity: 1; }
+
+/* ── Scanlines CRT ── */
+.crt-overlay {
+  position: fixed; inset: 0;
+  z-index: 9996;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .6s ease;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0)    0px,
+    rgba(0, 0, 0, 0)    2px,
+    rgba(0, 0, 0, .18)  3px,
+    rgba(0, 0, 0, 0)    4px
+  );
+}
+body.modo-hacker .crt-overlay {
+  opacity: 1;
+  animation: crtFlicker 4s infinite;
+}
+@keyframes crtFlicker {
+  0%, 100% { opacity: 1; }
+  92%      { opacity: 1; }
+  93%      { opacity: .75; }
+  94%      { opacity: 1; }
+  97%      { opacity: .85; }
+  98%      { opacity: 1; }
+}
+
+/* ── Toast de ativação ── */
+.hacker-toast {
+  position: fixed;
+  top: 24px; left: 50%;
+  transform: translate(-50%, -80px);
+  z-index: 9999;
+  background: #071019;
+  border: 1px solid var(--accent2, #00ff9d);
+  border-radius: 10px;
+  padding: 12px 22px;
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: var(--accent2, #00ff9d);
+  box-shadow: 0 0 24px rgba(0, 255, 157, .25);
+  transition: transform .4s cubic-bezier(.2, .9, .3, 1.2);
+  pointer-events: none;
+  white-space: nowrap;
+}
+.hacker-toast.show { transform: translate(-50%, 0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .trail-dot { display: none; }
+}
