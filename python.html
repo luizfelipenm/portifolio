@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="./assets/img/lf.ico" type="image/x-icon">
+  <title>Python — LF.</title>
+  <!-- Open Graph (preview em WhatsApp, Instagram, LinkedIn...) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Python 🐍 — a cobrinha caçadora de bugs">
+  <meta property="og:description" content="A clássica cobrinha em versão dev: corrija o máximo de bugs sem quebrar em produção. Consegue bater meu recorde?">
+  <meta property="og:image" content="https://luizfelipenm.dev/assets/img/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://luizfelipenm.dev/python.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="description" content="A clássica cobrinha em versão dev: corrija o máximo de bugs sem quebrar em produção.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/python.css">
+  <link rel="stylesheet" href="./assets/css/efeitos.css">
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <a href="./index.html" class="nav-logo">LF.</a>
+  <div class="nav-tag">Mini Game</div>
+  <a href="./index.html" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    Voltar ao portfólio
+  </a>
+</nav>
+
+<main>
+
+  <!-- Header -->
+  <div class="game-header">
+    <div class="game-eyebrow">// mini game</div>
+    <h1 class="game-title">Py<span>thon</span></h1>
+    <p class="game-sub">A cobrinha dev: corrija os bugs sem quebrar em produção 🐍<br>
+      <code>setas</code> ou <code>WASD</code> no PC · deslize o dedo no celular</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-value" id="sScore">0</div>
+      <div class="stat-label">Bugs corrigidos</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value yellow" id="sRecord">0</div>
+      <div class="stat-label">Recorde</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value green" id="sSpeed">1x</div>
+      <div class="stat-label">Velocidade</div>
+    </div>
+  </div>
+
+  <!-- Tabuleiro -->
+  <div class="board-wrap" id="boardWrap">
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- Overlay: início -->
+    <div class="overlay" id="startOverlay">
+      <div class="overlay-code">&gt;&gt;&gt; import python</div>
+      <div class="overlay-title">Pronto pra debugar?</div>
+      <div class="overlay-sub">Coma os bugs 🐛 e não colida com<br>as paredes nem com você mesmo.</div>
+      <button class="overlay-btn" id="startBtn">python main.py ▶</button>
+    </div>
+
+    <!-- Overlay: pausa -->
+    <div class="overlay hidden" id="pauseOverlay">
+      <div class="overlay-code"># processo pausado</div>
+      <div class="overlay-title">Pausado</div>
+      <div class="overlay-sub">Pressione P ou toque para continuar</div>
+    </div>
+
+    <!-- Overlay: game over -->
+    <div class="overlay hidden" id="overOverlay">
+      <div class="overlay-code" id="overTrace">Traceback (most recent call last):</div>
+      <div class="overlay-error" id="overError">ColisaoError: bateu na parede</div>
+      <div class="overlay-score">
+        <span id="overScore">0</span> bugs corrigidos
+        <span class="overlay-record hidden" id="overRecord">🏆 NOVO RECORDE!</span>
+      </div>
+      <button class="overlay-btn" id="retryBtn">tentar de novo ↻</button>
+    </div>
+  </div>
+
+  <!-- D-pad (só aparece no touch) -->
+  <div class="dpad" id="dpad">
+    <button class="dpad-btn dpad-up"    data-dir="up"    aria-label="Cima">▲</button>
+    <button class="dpad-btn dpad-left"  data-dir="left"  aria-label="Esquerda">◀</button>
+    <button class="dpad-btn dpad-down"  data-dir="down"  aria-label="Baixo">▼</button>
+    <button class="dpad-btn dpad-right" data-dir="right" aria-label="Direita">▶</button>
+  </div>
+
+  <p class="hint-line"><code>P</code> pausa · o jogo acelera a cada 4 bugs</p>
+
+</main>
+
+<footer>
+  <p>Feito por <a href="./index.html">Luiz Felipe Nascimento Mota</a> · JavaScript Vanilla · Portfólio LF.</p>
+</footer>
+
+<script src="./assets/js/python.js"></script>
+<script src="./assets/js/efeitos.js"></script>
+</body>
+</html>

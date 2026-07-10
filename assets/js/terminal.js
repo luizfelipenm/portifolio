@@ -58,6 +58,7 @@ const COMMANDS = {
     ['t-cyan',  '  speed-typing   ', 't-muted', 'mini-game de digitação com termos de TI'],
     ['t-cyan',  '  kick-bot       ', 't-muted', 'bot de chat p/ Kick.com em um único HTML'],
     ['t-cyan',  '  orcapro        ', 't-yellow', '[em desenvolvimento] ', 't-muted', 'PWA de orçamentos p/ prestadores de serviço'],
+    ['t-cyan',  '  python         ', 't-muted', 'a cobrinha dev — corrija bugs sem quebrar em produção'],
     ['', ''],
     ['t-muted', '  Dica: digite o nome de um projeto para ver detalhes.'],
   ],
@@ -82,6 +83,13 @@ const COMMANDS = {
     ['t-muted', '  Bot de chat para Kick.com que roda direto no navegador,'],
     ['t-muted', '  sem instalação. Fila de mensagens e timing humanizado.'],
     ['t-cyan',  '  Stack: HTML + JavaScript em arquivo único'],
+  ],
+
+  python: () => [
+    ['t-green', '> python'],
+    ['t-muted', '  A clássica cobrinha em versão dev: coma os bugs 🐛,'],
+    ['t-muted', '  não colida em produção. Acelera a cada 4 bugs.'],
+    ['t-link-line', './python.html', 'Jogar agora →'],
   ],
 
   orcapro: () => [

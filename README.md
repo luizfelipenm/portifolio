@@ -11,6 +11,7 @@ Portfólio pessoal construído do zero com **HTML, CSS e JavaScript vanilla** �
 | `index.html` | Página principal: sobre, experiências, projetos e contato |
 | `terminal.html` | Terminal interativo — explore o portfólio por linha de comando |
 | `speedtyping.html` | Mini-game de digitação rápida com termos reais de TI |
+| `python.html` | A cobrinha dev 🐍 — corrija bugs sem quebrar em produção |
 
 ## Estrutura
 
