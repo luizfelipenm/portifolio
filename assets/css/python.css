@@ -293,3 +293,10 @@ footer a:hover { text-decoration: underline; }
 }
 .som-btn:hover { color: var(--accent); border-color: var(--accent); }
 .hint-line b { color: var(--yellow); }
+
+.overlay-btn.secundario {
+  background: var(--card);
+  color: var(--accent);
+  border: 1px solid var(--border);
+}
+.overlay-btn.secundario:hover { border-color: var(--accent); box-shadow: 0 8px 24px rgba(0,212,255,.15); }

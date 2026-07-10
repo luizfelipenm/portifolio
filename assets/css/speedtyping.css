@@ -542,3 +542,19 @@ footer a:hover { text-decoration: underline; }
   .ranking-row { grid-template-columns: 26px 1fr auto auto; gap: 8px; font-size: 12px; padding: 8px 10px; }
   .ranking-data { display: none; }
 }
+
+/* ── BOTÃO DE SOM ── */
+.som-btn {
+  margin-left: 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 4px 12px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color .2s, border-color .2s;
+}
+.som-btn:hover { color: var(--accent); border-color: var(--accent); }

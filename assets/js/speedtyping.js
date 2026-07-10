@@ -235,6 +235,7 @@ function endGame() {
 
   // ranking pessoal
   const posicao = registrarNoRanking(wpm, acc);
+  if (posicao === 1) somRecorde(); else somFimDeJogo();
 
   document.getElementById('resultTitle').textContent = posicao === 1 ? '🏆 NOVO RECORDE!' : title;
   document.getElementById('resultMsg').textContent   = posicao && posicao > 1 ? msg + ` Você ficou em ${posicao}º no seu ranking.` : msg;
@@ -265,9 +266,11 @@ typingInput.addEventListener('input', () => {
     if(typed === target) {
       state.wordResults[state.current] = 'correct';
       state.correct++;
+      somPalavraCerta();
     } else {
       state.wordResults[state.current] = 'error';
       state.errors++;
+      somPalavraErrada();
     }
     state.current++;
     typingInput.value = '';
@@ -290,6 +293,7 @@ typingInput.addEventListener('input', () => {
   // live coloring
   const isCorrect = target.startsWith(val);
   typingInput.className = 'typing-input ' + (val.length === 0 ? '' : isCorrect ? 'correct' : 'wrong');
+  somDigitacao(isCorrect, val.length);
   colorLetters(val);
   updateStats();
 });
@@ -622,3 +626,60 @@ if (rankingClear) {
 
 // exibe o ranking salvo ao abrir a página
 renderRanking();
+
+// ══════════════════════════════════════════════
+//  SONS (WebAudio · gerados por código)
+// ══════════════════════════════════════════════
+const SOM_ST_KEY = 'lf-st-som';
+let stAudioCtx = null;
+let stSomLigado = true;
+try { stSomLigado = localStorage.getItem(SOM_ST_KEY) !== '0'; } catch (e) {}
+
+function stBeep(freq, dur, tipo, vol, quando) {
+  if (!stSomLigado) return;
+  try {
+    stAudioCtx = stAudioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    const t = stAudioCtx.currentTime + (quando || 0);
+    const osc = stAudioCtx.createOscillator();
+    const g = stAudioCtx.createGain();
+    osc.type = tipo || 'sine';
+    osc.frequency.value = freq;
+    g.gain.setValueAtTime(vol || 0.05, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    osc.connect(g); g.connect(stAudioCtx.destination);
+    osc.start(t); osc.stop(t + dur);
+  } catch (e) {}
+}
+
+// clique sutil por tecla; buzz só quando ERRA (transição certo→errado)
+let stEstavaCerto = true;
+function somDigitacao(certo, len) {
+  if (len === 0) { stEstavaCerto = true; return; }
+  if (certo) {
+    stBeep(880, .03, 'sine', .015);          // tique quase imperceptível
+  } else if (stEstavaCerto) {
+    stBeep(180, .12, 'sawtooth', .04);       // buzz curto ao errar
+  }
+  stEstavaCerto = certo;
+}
+function somPalavraCerta()  { stBeep(660, .07, 'sine', .05); stBeep(990, .09, 'sine', .05, .06); }
+function somPalavraErrada() { stBeep(220, .12, 'square', .045); stBeep(160, .16, 'square', .045, .09); }
+function somFimDeJogo()     { stBeep(520, .1, 'sine', .05); stBeep(390, .18, 'sine', .05, .12); }
+function somRecorde() {
+  [523, 659, 784, 1047].forEach((f, i) => stBeep(f, .14, 'square', .05, i * .11));
+}
+
+// botão de mudo
+const stSomBtn = document.getElementById('somBtn');
+function stAtualizaSomBtn() {
+  if (stSomBtn) stSomBtn.textContent = stSomLigado ? '🔊 som' : '🔇 mudo';
+}
+if (stSomBtn) {
+  stSomBtn.addEventListener('click', () => {
+    stSomLigado = !stSomLigado;
+    try { localStorage.setItem(SOM_ST_KEY, stSomLigado ? '1' : '0'); } catch (e) {}
+    stAtualizaSomBtn();
+    if (stSomLigado) somPalavraCerta();
+  });
+  stAtualizaSomBtn();
+}

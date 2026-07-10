@@ -433,3 +433,167 @@
   dimensionar();
   requestAnimationFrame(render);
 })();
+
+// ══════════════════════════════════════════════
+//  COMPARTILHAR RESULTADO — imagem p/ stories
+//  (1080x1920 · Instagram / WhatsApp)
+// ══════════════════════════════════════════════
+(function () {
+  'use strict';
+
+  const shareBtn = document.getElementById('shareBtn');
+  if (!shareBtn) return;
+  const PY_URL = 'luizfelipenm.dev/python.html';
+
+  function rRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function fit(ctx, texto, molde, tamMax, larguraMax) {
+    let tam = tamMax;
+    do {
+      ctx.font = molde.replace('{S}', tam);
+      if (ctx.measureText(texto).width <= larguraMax) break;
+      tam -= 2;
+    } while (tam > 20);
+    return tam;
+  }
+
+  async function gerarImagem() {
+    await Promise.all([
+      document.fonts.load('800 200px Syne'),
+      document.fonts.load('700 44px "Space Mono"'),
+      document.fonts.load('400 34px "Space Mono"'),
+    ]).catch(() => {});
+
+    const score   = document.getElementById('overScore').textContent;
+    const recorde = document.getElementById('sRecord').textContent;
+    const nivel   = document.getElementById('sSpeed').textContent;
+
+    const W = 1080, H = 1920;
+    const cv = document.createElement('canvas');
+    cv.width = W; cv.height = H;
+    const ctx = cv.getContext('2d');
+
+    // fundo
+    ctx.fillStyle = '#050a0e';
+    ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = 'rgba(0,212,255,0.05)';
+    ctx.lineWidth = 1;
+    for (let gx = 0; gx <= W; gx += 72) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke(); }
+    for (let gy = 0; gy <= H; gy += 72) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke(); }
+    let g = ctx.createRadialGradient(220, 260, 0, 220, 260, 900);
+    g.addColorStop(0, 'rgba(0,212,255,0.16)'); g.addColorStop(1, 'transparent');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    g = ctx.createRadialGradient(900, 1700, 0, 900, 1700, 900);
+    g.addColorStop(0, 'rgba(0,255,157,0.12)'); g.addColorStop(1, 'transparent');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+
+    ctx.textAlign = 'center';
+
+    // topo
+    ctx.fillStyle = '#00d4ff';
+    ctx.font = '800 84px Syne, sans-serif';
+    ctx.fillText('LF.', W / 2, 250);
+    ctx.fillStyle = '#00ff9d';
+    ctx.font = '700 40px "Space Mono", monospace';
+    ctx.fillText('//  P Y T H O N  🐍', W / 2, 340);
+
+    // card central
+    const cx = 80, cw = W - 160, cy = 480, ch = 880;
+    ctx.fillStyle = '#0d1f2d';
+    rRect(ctx, cx, cy, cw, ch, 36); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,212,255,0.4)';
+    ctx.lineWidth = 3;
+    rRect(ctx, cx, cy, cw, ch, 36); ctx.stroke();
+    g = ctx.createLinearGradient(cx, 0, cx + cw, 0);
+    g.addColorStop(0, '#00d4ff'); g.addColorStop(1, '#00ff9d');
+    ctx.fillStyle = g;
+    ctx.fillRect(cx + 36, cy, cw - 72, 6);
+
+    // score gigante
+    g = ctx.createLinearGradient(0, cy + 150, 0, cy + 420);
+    g.addColorStop(0, '#00d4ff'); g.addColorStop(1, '#00ff9d');
+    ctx.fillStyle = g;
+    fit(ctx, score, '800 {S}px Syne, sans-serif', 300, cw - 120);
+    ctx.fillText(score, W / 2, cy + 400);
+
+    ctx.fillStyle = '#6a8fa8';
+    ctx.font = '700 38px "Space Mono", monospace';
+    ctx.fillText('BUGS CORRIGIDOS', W / 2, cy + 480);
+
+    ctx.strokeStyle = 'rgba(0,212,255,0.15)';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(cx + 80, cy + 560); ctx.lineTo(cx + cw - 80, cy + 560); ctx.stroke();
+
+    // stats: recorde · velocidade
+    const stats = [
+      [recorde, 'RECORDE',    '#ffd166'],
+      [nivel,   'VELOCIDADE', '#00d4ff'],
+    ];
+    const colW = cw / 2;
+    stats.forEach(([val, label, cor], i) => {
+      const sx = cx + colW * i + colW / 2;
+      ctx.fillStyle = cor;
+      ctx.font = '700 92px "Space Mono", monospace';
+      ctx.fillText(val, sx, cy + 710);
+      ctx.fillStyle = '#6a8fa8';
+      ctx.font = '400 30px "Space Mono", monospace';
+      ctx.fillText(label, sx, cy + 770);
+    });
+
+    // desafio
+    ctx.fillStyle = '#ffffff';
+    fit(ctx, 'Consegue me superar?', '800 {S}px Syne, sans-serif', 62, 920);
+    ctx.fillText('Consegue me superar?', W / 2, 1520);
+    ctx.fillStyle = '#00ff9d';
+    ctx.font = '400 36px "Space Mono", monospace';
+    ctx.fillText('~$ python main.py', W / 2, 1595);
+
+    // rodapé
+    ctx.fillStyle = '#0d1f2d';
+    rRect(ctx, W / 2 - 400, 1680, 800, 90, 45); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,212,255,0.35)';
+    ctx.lineWidth = 2;
+    rRect(ctx, W / 2 - 400, 1680, 800, 90, 45); ctx.stroke();
+    ctx.fillStyle = '#00d4ff';
+    fit(ctx, PY_URL, '700 {S}px "Space Mono", monospace', 32, 720);
+    ctx.fillText(PY_URL, W / 2, 1738);
+
+    return new Promise(res => cv.toBlob(res, 'image/png'));
+  }
+
+  shareBtn.addEventListener('click', async () => {
+    shareBtn.disabled = true;
+    const original = shareBtn.textContent;
+    try {
+      const blob = await gerarImagem();
+      const file = new File([blob], 'python-lf.png', { type: 'image/png' });
+      const score = document.getElementById('overScore').textContent;
+      const texto = `🐍 Corrigi ${score} bugs no Python, a cobrinha dev! Consegue me superar? https://${PY_URL}`;
+
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file], text: texto }); } catch (e) { /* cancelou */ }
+      } else {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'python-lf.png';
+        a.click();
+        URL.revokeObjectURL(a.href);
+        try { await navigator.clipboard.writeText(texto); } catch (e) {}
+        shareBtn.textContent = 'imagem baixada! ✅';
+        setTimeout(() => { shareBtn.textContent = original; }, 2000);
+      }
+    } catch (e) {
+      shareBtn.textContent = 'ops, falhou';
+      setTimeout(() => { shareBtn.textContent = original; }, 2000);
+    }
+    shareBtn.disabled = false;
+  });
+})();
