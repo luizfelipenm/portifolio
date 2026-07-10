@@ -466,3 +466,79 @@ footer a:hover { text-decoration: underline; }
 
   footer { padding: 18px 16px; font-size: 11px; }
 }
+
+/* ── RANKING PESSOAL ── */
+.ranking-panel {
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 24px;
+}
+.ranking-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.ranking-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+}
+.ranking-clear {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 4px 12px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color .2s, border-color .2s;
+}
+.ranking-clear:hover { color: var(--red); border-color: var(--red); }
+
+.ranking-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.ranking-row {
+  display: grid;
+  grid-template-columns: 34px 1fr auto auto auto;
+  gap: 12px;
+  align-items: center;
+  padding: 9px 14px;
+  background: rgba(0, 212, 255, 0.04);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+}
+.ranking-row.novo {
+  border-color: var(--accent2);
+  background: rgba(0, 255, 157, 0.07);
+  animation: rankPop .4s ease;
+}
+@keyframes rankPop { from { transform: scale(.97); opacity: .4; } to { transform: none; opacity: 1; } }
+
+.ranking-pos { color: var(--muted); font-weight: 700; }
+.ranking-row:nth-child(1) .ranking-pos { color: #ffd166; }
+.ranking-row:nth-child(2) .ranking-pos { color: #c9dbe6; }
+.ranking-row:nth-child(3) .ranking-pos { color: #cd8f52; }
+.ranking-wpm { color: var(--accent); font-weight: 700; }
+.ranking-acc { color: var(--accent2); }
+.ranking-modo { color: var(--muted); font-size: 11px; }
+.ranking-data { color: var(--muted); font-size: 11px; }
+
+.ranking-empty {
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  padding: 10px 0 4px;
+}
+
+@media (max-width: 600px) {
+  .ranking-panel { padding: 14px 12px; }
+  .ranking-row { grid-template-columns: 26px 1fr auto auto; gap: 8px; font-size: 12px; padding: 8px 10px; }
+  .ranking-data { display: none; }
+}

@@ -233,8 +233,11 @@ function endGame() {
   const title = wpm >= 60 ? '🔥 Incrível!' : wpm >= 40 ? '✅ Bom trabalho!' : wpm >= 20 ? '💪 Continue praticando!' : '🐢 Vamos aquecer!';
   const msg   = `Você digitou ${state.correct} termos de TI corretamente com ${acc}% de precisão${state.mode !== 'zen' ? ` em ${state.totalTime} segundos` : ''}.`;
 
-  document.getElementById('resultTitle').textContent = title;
-  document.getElementById('resultMsg').textContent   = msg;
+  // ranking pessoal
+  const posicao = registrarNoRanking(wpm, acc);
+
+  document.getElementById('resultTitle').textContent = posicao === 1 ? '🏆 NOVO RECORDE!' : title;
+  document.getElementById('resultMsg').textContent   = posicao && posicao > 1 ? msg + ` Você ficou em ${posicao}º no seu ranking.` : msg;
 
   resultsPanel.classList.add('show');
   resultsPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -541,3 +544,81 @@ function feedbackShare(msg) {
   shareBtn.textContent = msg;
   setTimeout(() => { shareBtn.innerHTML = original; }, 2000);
 }
+
+// ══════════════════════════════════════════════
+//  RANKING PESSOAL (localStorage · top 10)
+// ══════════════════════════════════════════════
+const RANK_KEY = 'lf-st-ranking';
+
+function lerRanking() {
+  try { return JSON.parse(localStorage.getItem(RANK_KEY)) || []; }
+  catch (e) { return []; }
+}
+
+function salvarRanking(lista) {
+  try { localStorage.setItem(RANK_KEY, JSON.stringify(lista)); } catch (e) {}
+}
+
+function registrarNoRanking(wpm, acc) {
+  const entrada = {
+    wpm: Number(wpm),
+    acc: Number(acc),
+    modo: state.mode === 'zen' ? 'zen' : state.totalTime + 's',
+    data: Date.now(),
+  };
+  const lista = lerRanking();
+  lista.push(entrada);
+  lista.sort((a, b) => b.wpm - a.wpm || b.acc - a.acc);
+  const top = lista.slice(0, 10);
+  salvarRanking(top);
+  renderRanking(entrada.data);
+  // posição 1-based, ou null se não entrou no top 10
+  const pos = top.findIndex(e => e.data === entrada.data);
+  return pos === -1 ? null : pos + 1;
+}
+
+function renderRanking(destaqueData) {
+  const ul = document.getElementById('rankingList');
+  const vazio = document.getElementById('rankingEmpty');
+  if (!ul) return;
+  const lista = lerRanking();
+  ul.innerHTML = '';
+  vazio.style.display = lista.length ? 'none' : 'block';
+
+  lista.forEach((e, i) => {
+    const li = document.createElement('li');
+    li.className = 'ranking-row' + (e.data === destaqueData ? ' novo' : '');
+    const medalha = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1) + '.';
+    const dia = new Date(e.data).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+    li.innerHTML =
+      `<span class="ranking-pos">${medalha}</span>` +
+      `<span class="ranking-wpm">${e.wpm} WPM</span>` +
+      `<span class="ranking-acc">${e.acc}%</span>` +
+      `<span class="ranking-modo">${e.modo}</span>` +
+      `<span class="ranking-data">${dia}</span>`;
+    ul.appendChild(li);
+  });
+}
+
+// limpar histórico (com confirmação simples)
+const rankingClear = document.getElementById('rankingClear');
+if (rankingClear) {
+  rankingClear.addEventListener('click', () => {
+    if (rankingClear.dataset.confirma === '1') {
+      salvarRanking([]);
+      renderRanking();
+      rankingClear.textContent = 'limpar';
+      delete rankingClear.dataset.confirma;
+    } else {
+      rankingClear.dataset.confirma = '1';
+      rankingClear.textContent = 'confirmar?';
+      setTimeout(() => {
+        rankingClear.textContent = 'limpar';
+        delete rankingClear.dataset.confirma;
+      }, 2500);
+    }
+  });
+}
+
+// exibe o ranking salvo ao abrir a página
+renderRanking();
