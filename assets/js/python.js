@@ -597,3 +597,57 @@
     shareBtn.disabled = false;
   });
 })();
+
+// ══════════════════════════════════════════════
+//  TELA CHEIA (nativa + fallback iOS)
+// ══════════════════════════════════════════════
+(function () {
+  'use strict';
+
+  const area  = document.getElementById('gameArea');
+  const fsBtn = document.getElementById('fsBtn');
+  if (!area || !fsBtn) return;
+
+  const temNativo = area.requestFullscreen || area.webkitRequestFullscreen;
+
+  function estaCheio() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement) ||
+           area.classList.contains('fs-fake');
+  }
+
+  function atualizarBtn() {
+    fsBtn.textContent = estaCheio() ? '✕ sair' : '⛶ tela cheia';
+    // canvas precisa recalcular o tamanho após a mudança
+    window.dispatchEvent(new Event('resize'));
+  }
+
+  async function alternar() {
+    if (estaCheio()) {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else if (document.webkitFullscreenElement) document.webkitExitFullscreen();
+      else area.classList.remove('fs-fake');
+    } else if (temNativo) {
+      try {
+        if (area.requestFullscreen) await area.requestFullscreen();
+        else area.webkitRequestFullscreen();
+      } catch (e) {
+        area.classList.add('fs-fake'); // nativo recusou → fallback
+      }
+    } else {
+      area.classList.add('fs-fake');   // iOS
+    }
+    setTimeout(atualizarBtn, 120);
+  }
+
+  fsBtn.addEventListener('click', alternar);
+  document.addEventListener('fullscreenchange', atualizarBtn);
+  document.addEventListener('webkitfullscreenchange', atualizarBtn);
+
+  // Esc sai do fake fullscreen (no nativo o navegador já cuida disso)
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && area.classList.contains('fs-fake')) {
+      area.classList.remove('fs-fake');
+      atualizarBtn();
+    }
+  });
+})();
