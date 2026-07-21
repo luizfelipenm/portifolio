@@ -16,35 +16,13 @@ Portfólio pessoal construído do zero com **HTML, CSS e JavaScript vanilla** �
 ## Estrutura
 
 ```
-portifolio/
-├── assets/
-│   ├── css/
-│   │   ├── efeitos.css
-│   │   ├── index.css
-│   │   ├── python.css
-│   │   ├── speedtyping.css
-│   │   └── terminal.css
-│   ├── img/
-│   │   ├── lf.ico
-│   │   ├── lf-icon-512.png
-│   │   ├── logol.ico
-│   │   ├── luizfelipenm.jpg
-│   │   ├── og-image.png
-│   │   ├── og-speedtyping.png
-│   │   └── og-terminal.png
-│   ├── js/
-│   │   ├── efeitos.js
-│   │   ├── index.js
-│   │   ├── python.js
-│   │   ├── speedtyping.js
-│   │   └── terminal.js
-│   └── curriculo-luiz-felipe.pdf
 ├── index.html
-├── python.html
-├── speedtyping.html
 ├── terminal.html
-├── robots.txt
-├── sitemap.xml
+├── speedtyping.html
+├── assets/
+│   ├── css/        # um arquivo de estilo por página
+│   ├── js/         # um script por página
+│   └── img/        # imagens e ícones
 └── README.md
 ```
 
