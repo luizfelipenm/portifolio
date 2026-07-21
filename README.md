@@ -19,6 +19,7 @@ Portfólio pessoal construído do zero com **HTML, CSS e JavaScript vanilla** �
 ├── index.html
 ├── terminal.html
 ├── speedtyping.html
+├── python.html
 ├── assets/
 │   ├── css/        # um arquivo de estilo por página
 │   ├── js/         # um script por página
