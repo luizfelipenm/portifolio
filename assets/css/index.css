@@ -193,6 +193,46 @@ nav {
 }
 .drawer-minigame:hover { opacity: .85; transform: scale(1.03); }
 
+/* ── NAV / DRAWER: PROJETOS ── */
+.nav-projects {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #050a0e !important;
+  background: linear-gradient(90deg, var(--accent3), var(--accent));
+  padding: 6px 14px;
+  border-radius: 100px;
+  text-decoration: none;
+  transition: opacity .2s, transform .2s, box-shadow .2s !important;
+  white-space: nowrap;
+}
+.nav-projects::after { display: none !important; }
+.nav-projects:hover {
+  opacity: .9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 18px rgba(123,94,167,.35);
+  color: #050a0e !important;
+}
+.drawer-projects {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(90deg, var(--accent3), var(--accent));
+  color: #050a0e !important;
+  font-family: 'Syne', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  padding: 10px 32px;
+  border-radius: 100px;
+  text-decoration: none;
+  transition: opacity .2s, transform .2s;
+}
+.drawer-projects:hover { opacity: .85; transform: scale(1.03); }
+
 /* ── HERO ── */
 .hero {
   min-height: 100vh;
