@@ -233,6 +233,67 @@ nav {
 }
 .drawer-projects:hover { opacity: .85; transform: scale(1.03); }
 
+/* ── NAV: MINI GAMES DROPDOWN (desktop) ── */
+.nav-games-wrap { position: relative; list-style: none; }
+.nav-games-btn { cursor: pointer; border: none; font-family: inherit; }
+.games-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px;
+  min-width: 230px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.5);
+  z-index: 300;
+  animation: gamesDropIn .2s ease both;
+}
+@keyframes gamesDropIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+.games-dropdown.open { display: block; }
+.games-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text);
+  transition: background .2s;
+}
+.games-dropdown-item:hover { background: rgba(0,212,255,.07); }
+.games-dd-icon { font-size: 22px; flex-shrink: 0; }
+.games-dd-name { display: block; font-size: 14px; font-weight: 600; color: var(--text); }
+.games-dd-sub  { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* ── DRAWER: MINI GAMES GROUP (mobile) ── */
+.drawer-games-group { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.drawer-games-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+.drawer-games-links { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.drawer-game-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color .2s, background .2s;
+}
+.drawer-game-item:hover { border-color: var(--accent); background: var(--glow); }
+
 /* ── HERO ── */
 .hero {
   min-height: 100vh;

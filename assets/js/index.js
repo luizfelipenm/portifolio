@@ -1,4 +1,22 @@
-// Hamburger menu
+// ── Mini Games dropdown ──
+  const gamesBtn      = document.getElementById('gamesBtn');
+  const gamesDropdown = document.getElementById('gamesDropdown');
+  if (gamesBtn) {
+    gamesBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      gamesDropdown.classList.toggle('open');
+    });
+    document.addEventListener('click', e => {
+      if (!gamesBtn.contains(e.target) && !gamesDropdown.contains(e.target)) {
+        gamesDropdown.classList.remove('open');
+      }
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') gamesDropdown.classList.remove('open');
+    });
+  }
+
+  // Hamburger menu
   const hamburger = document.getElementById('hamburger');
   const navDrawer = document.getElementById('navDrawer');
   hamburger.addEventListener('click', () => {

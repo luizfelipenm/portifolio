@@ -47,8 +47,25 @@
     <li><a href="#certificados">Certificados</a></li>
     <li><a href="#contato">Contato</a></li>
     <li><a href="./projetos.html" class="nav-projects">🗂️ Projetos</a></li>
-    <li><a href="./speedtyping.html" class="nav-minigame">⌨️ Typing</a></li>
-    <li><a href="./python.html" class="nav-minigame">🐍 Python</a></li>
+    <li class="nav-games-wrap">
+      <button class="nav-minigame nav-games-btn" id="gamesBtn" type="button">🎮 Mini Games ▾</button>
+      <div class="games-dropdown" id="gamesDropdown">
+        <a href="./speedtyping.html" class="games-dropdown-item">
+          <span class="games-dd-icon">⌨️</span>
+          <span>
+            <span class="games-dd-name">Speed Typing</span>
+            <span class="games-dd-sub">Termos de TI contra o tempo</span>
+          </span>
+        </a>
+        <a href="./python.html" class="games-dropdown-item">
+          <span class="games-dd-icon">🐍</span>
+          <span>
+            <span class="games-dd-name">Python Snake</span>
+            <span class="games-dd-sub">A cobrinha caçadora de bugs</span>
+          </span>
+        </a>
+      </div>
+    </li>
   </ul>
   <button class="nav-hamburger" id="hamburger" aria-label="Abrir menu">
     <span></span><span></span><span></span>
@@ -63,8 +80,13 @@
   <a href="#certificados" onclick="closeDrawer()">Certificados</a>
   <a href="#contato"      onclick="closeDrawer()">Contato</a>
   <a href="./projetos.html" class="drawer-projects">🗂️ Projetos</a>
-  <a href="./speedtyping.html" class="drawer-minigame">⌨️ Speed Typing</a>
-  <a href="./python.html" class="drawer-minigame">🐍 Python</a>
+  <div class="drawer-games-group">
+    <div class="drawer-games-label">🎮 Mini Games</div>
+    <div class="drawer-games-links">
+      <a href="./speedtyping.html" onclick="closeDrawer()" class="drawer-game-item">⌨️ Speed Typing</a>
+      <a href="./python.html" onclick="closeDrawer()" class="drawer-game-item">🐍 Python Snake</a>
+    </div>
+  </div>
 </div>
 
 <!-- Hero -->
@@ -93,7 +115,7 @@
     <!-- Seção "Agora" — atualize esta linha sempre que mudar de foco -->
     <div class="now-box">
       <span class="now-dot"></span>
-      <span><b>Agora:</b> construindo o OrçaPro · estudando Next.js &amp; Tailwind</span>
+      <span><b>Agora:</b> desenvolvendo o Perto App · React Native &amp; Supabase Realtime</span>
     </div>
   </div>
   <div class="hero-photo-wrap">
